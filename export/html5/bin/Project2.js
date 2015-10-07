@@ -23,20 +23,14 @@ ApplicationMain.create = function() {
 	ApplicationMain.preloader.create(ApplicationMain.config);
 	var urls = [];
 	var types = [];
-	urls.push("assets/data/data-goes-here.txt");
-	types.push("TEXT");
 	urls.push("assets/images/backdrop.png");
 	types.push("IMAGE");
 	urls.push("assets/images/car.png");
 	types.push("IMAGE");
-	urls.push("assets/images/images-go-here.txt");
-	types.push("TEXT");
 	urls.push("assets/images/road.png");
 	types.push("IMAGE");
-	urls.push("assets/music/music-goes-here.txt");
-	types.push("TEXT");
-	urls.push("assets/sounds/sounds-go-here.txt");
-	types.push("TEXT");
+	urls.push("assets/images/townBG.png");
+	types.push("IMAGE");
 	urls.push("assets/sounds/beep.mp3");
 	types.push("MUSIC");
 	urls.push("assets/sounds/flixel.mp3");
@@ -71,7 +65,7 @@ ApplicationMain.init = function() {
 	if(total == 0) ApplicationMain.start();
 };
 ApplicationMain.main = function() {
-	ApplicationMain.config = { build : "25", company : "HaxeFlixel", file : "Project2", fps : 60, name : "Project2", orientation : "portrait", packageName : "com.example.myapp", version : "0.0.1", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 720, parameters : "{}", resizable : true, stencilBuffer : true, title : "Project2", vsync : true, width : 960, x : null, y : null}]};
+	ApplicationMain.config = { build : "44", company : "HaxeFlixel", file : "Project2", fps : 60, name : "Project2", orientation : "portrait", packageName : "com.example.myapp", version : "0.0.1", windows : [{ antialiasing : 0, background : 0, borderless : false, depthBuffer : false, display : 0, fullscreen : false, hardware : true, height : 720, parameters : "{}", resizable : true, stencilBuffer : true, title : "Project2", vsync : true, width : 960, x : null, y : null}]};
 };
 ApplicationMain.start = function() {
 	var hasMain = false;
@@ -1390,27 +1384,18 @@ var DefaultAssetLibrary = function() {
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$assets_$fonts_$nokiafc22_$ttf);
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$assets_$fonts_$arial_$ttf);
 	var id;
-	id = "assets/data/data-goes-here.txt";
-	this.path.set(id,id);
-	this.type.set(id,"TEXT");
 	id = "assets/images/backdrop.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
 	id = "assets/images/car.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "assets/images/images-go-here.txt";
-	this.path.set(id,id);
-	this.type.set(id,"TEXT");
 	id = "assets/images/road.png";
 	this.path.set(id,id);
 	this.type.set(id,"IMAGE");
-	id = "assets/music/music-goes-here.txt";
+	id = "assets/images/townBG.png";
 	this.path.set(id,id);
-	this.type.set(id,"TEXT");
-	id = "assets/sounds/sounds-go-here.txt";
-	this.path.set(id,id);
-	this.type.set(id,"TEXT");
+	this.type.set(id,"IMAGE");
 	id = "assets/sounds/beep.mp3";
 	this.path.set(id,id);
 	this.type.set(id,"MUSIC");
@@ -2353,8 +2338,17 @@ MenuState.prototype = $extend(flixel_FlxState.prototype,{
 		var car = new flixel_FlxSprite();
 		car.loadGraphic("assets/images/car.png");
 		this.add(car);
-		car.set_x(480);
+		car.set_x(400);
 		car.set_y(500);
+		var title = new flixel_text_FlxText(200,100,600);
+		title.set_text("Ontario Trail");
+		title.set_size(64);
+		this.add(title);
+		var startGame = function() {
+			flixel_FlxG.switchState(new ScrollState());
+		};
+		var playButton = new flixel_ui_FlxButton(400,300,"Play",startGame);
+		this.add(playButton);
 	}
 	,destroy: function() {
 		flixel_FlxState.prototype.destroy.call(this);
@@ -2484,6 +2478,39 @@ Reflect.makeVarArgs = function(f) {
 		return f(a);
 	};
 };
+var ScrollState = function(MaxSize) {
+	flixel_FlxState.call(this,MaxSize);
+};
+$hxClasses["ScrollState"] = ScrollState;
+ScrollState.__name__ = ["ScrollState"];
+ScrollState.__super__ = flixel_FlxState;
+ScrollState.prototype = $extend(flixel_FlxState.prototype,{
+	backdrop: null
+	,road: null
+	,_testBTN: null
+	,create: function() {
+		flixel_FlxState.prototype.create.call(this);
+		this.backdrop = new flixel_addons_display_FlxBackdrop("assets/images/backdrop.png");
+		this.backdrop.velocity.set_x(-200);
+		this.add(this.backdrop);
+		this.road = new flixel_addons_display_FlxBackdrop("assets/images/road.png",0,0,true,false);
+		this.road.set_y(448);
+		this.road.velocity.set_x(-750);
+		this.add(this.road);
+		this._testBTN = new flixel_ui_FlxButton(0,0,"Change",$bind(this,this.clickToChange));
+		this.add(this._testBTN);
+	}
+	,clickToChange: function() {
+		flixel_FlxG.switchState(new TownState());
+	}
+	,destroy: function() {
+		flixel_FlxState.prototype.destroy.call(this);
+	}
+	,update: function() {
+		flixel_FlxState.prototype.update.call(this);
+	}
+	,__class__: ScrollState
+});
 var Std = function() { };
 $hxClasses["Std"] = Std;
 Std.__name__ = ["Std"];
@@ -2566,6 +2593,25 @@ StringTools.hex = function(n,digits) {
 StringTools.fastCodeAt = function(s,index) {
 	return s.charCodeAt(index);
 };
+var TownState = function(MaxSize) {
+	flixel_FlxState.call(this,MaxSize);
+};
+$hxClasses["TownState"] = TownState;
+TownState.__name__ = ["TownState"];
+TownState.__super__ = flixel_FlxState;
+TownState.prototype = $extend(flixel_FlxState.prototype,{
+	create: function() {
+		flixel_FlxState.prototype.create.call(this);
+		this.add(new flixel_FlxSprite(0,0,"assets/images/townBG.png"));
+	}
+	,update: function() {
+		flixel_FlxState.prototype.update.call(this);
+	}
+	,destroy: function() {
+		flixel_FlxState.prototype.destroy.call(this);
+	}
+	,__class__: TownState
+});
 var ValueType = $hxClasses["ValueType"] = { __ename__ : ["ValueType"], __constructs__ : ["TNull","TInt","TFloat","TBool","TObject","TFunction","TClass","TEnum","TUnknown"] };
 ValueType.TNull = ["TNull",0];
 ValueType.TNull.toString = $estr;

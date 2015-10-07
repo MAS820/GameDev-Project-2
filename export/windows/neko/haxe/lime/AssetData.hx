@@ -16,20 +16,14 @@ class AssetData {
 		
 		if (!initialized) {
 			
-			path.set ("assets/data/data-goes-here.txt", "assets/data/data-goes-here.txt");
-			type.set ("assets/data/data-goes-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
 			path.set ("assets/images/backdrop.png", "assets/images/backdrop.png");
 			type.set ("assets/images/backdrop.png", Reflect.field (AssetType, "image".toUpperCase ()));
 			path.set ("assets/images/car.png", "assets/images/car.png");
 			type.set ("assets/images/car.png", Reflect.field (AssetType, "image".toUpperCase ()));
-			path.set ("assets/images/images-go-here.txt", "assets/images/images-go-here.txt");
-			type.set ("assets/images/images-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
 			path.set ("assets/images/road.png", "assets/images/road.png");
 			type.set ("assets/images/road.png", Reflect.field (AssetType, "image".toUpperCase ()));
-			path.set ("assets/music/music-goes-here.txt", "assets/music/music-goes-here.txt");
-			type.set ("assets/music/music-goes-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
-			path.set ("assets/sounds/sounds-go-here.txt", "assets/sounds/sounds-go-here.txt");
-			type.set ("assets/sounds/sounds-go-here.txt", Reflect.field (AssetType, "text".toUpperCase ()));
+			path.set ("assets/images/townBG.png", "assets/images/townBG.png");
+			type.set ("assets/images/townBG.png", Reflect.field (AssetType, "image".toUpperCase ()));
 			path.set ("assets/sounds/beep.ogg", "assets/sounds/beep.ogg");
 			type.set ("assets/sounds/beep.ogg", Reflect.field (AssetType, "sound".toUpperCase ()));
 			path.set ("assets/sounds/flixel.ogg", "assets/sounds/flixel.ogg");

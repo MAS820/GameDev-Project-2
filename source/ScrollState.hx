@@ -16,6 +16,10 @@ class ScrollState extends FlxState
 {
 	public var backdrop:FlxBackdrop;
 	public var road:FlxBackdrop;
+	
+	//testing perposes
+	private var _testBTN : FlxButton;
+	/////////////////////////////////
 
 	override public function create():Void
 	{
@@ -29,7 +33,19 @@ class ScrollState extends FlxState
 		road.y = 448;
 		road.velocity.x = -750;
 		add(road);
+		
+		//testing perposes
+		_testBTN = new FlxButton(0,0,"Change", clickToChange);
+		add(_testBTN);
+		////////////////////////////////////////////////////////
 	}
+	
+	//testing perposes
+	private function clickToChange():Void 
+	{
+		FlxG.switchState(new TownState());
+	}
+	///////////////////////////////////////
 	
 	override public function destroy():Void
 	{
