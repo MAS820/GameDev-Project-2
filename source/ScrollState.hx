@@ -7,6 +7,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
 import flixel.addons.display.FlxBackdrop;
+import source.Truck;
 
 /**
  * ...
@@ -16,6 +17,7 @@ class ScrollState extends FlxState
 {
 	public var backdrop:FlxBackdrop;
 	public var road:FlxBackdrop;
+	private var _player: Truck;
 
 	override public function create():Void
 	{
@@ -29,6 +31,11 @@ class ScrollState extends FlxState
 		road.y = 448;
 		road.velocity.x = -750;
 		add(road);
+		
+		super.create();
+		_player = new Truck(100, 100);
+		_player.speed = 200;
+		add(_player);
 	}
 	
 	override public function destroy():Void
