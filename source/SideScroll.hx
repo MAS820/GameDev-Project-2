@@ -6,18 +6,24 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import flixel.util.FlxMath;
+import source.Truck;
 
 /**
  * A FlxState which can be used for the actual gameplay.
  */
-class PlayState extends FlxState
+class SideScroll extends FlxState
 {
+	
+	private var _player:Truck;
 	/**
 	 * Function that is called up when to state is created to set it up. 
 	 */
 	override public function create():Void
 	{
 		super.create();
+		_player = new Truck(100, 100);
+		_player.speed = 200;
+		add(_player);
 	}
 	
 	/**
