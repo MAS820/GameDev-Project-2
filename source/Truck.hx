@@ -12,9 +12,11 @@ class Truck extends FlxSprite
 	public function new(X:Float = 0, Y:Float = 0) 
 	{
 		super(X, Y);
-		makeGraphic(60, 30, FlxColor.RED);
-		drag.x = drag.y = 900;
+		makeGraphic(150, 75, FlxColor.RED);
+		drag.x = drag.y = 1500;
 		speed = 200;
+		
+		acceleration.x = acceleration.y = 0;
 		
 		alcoholLevel = 0.5;
 		
@@ -31,15 +33,15 @@ class Truck extends FlxSprite
 		_left = FlxG.keys.anyPressed(["LEFT", "A"]);
 		_right = FlxG.keys.anyPressed(["RIGHT", "D"]);
 		
-		if (FlxG.keys.justPressed.LBRACKET) {
-			alcoholLevel -= 0.1;
-			if (alcoholLevel < 0.1)
-				alcoholLevel = 0.1;
+		if (FlxG.keys.pressed.LBRACKET) {
+			alcoholLevel -= 0.05;
+			if (alcoholLevel < 0.01)
+				alcoholLevel = 0.01;
 		}
-		else if (FlxG.keys.justPressed.RBRACKET) {
-			alcoholLevel += 0.1;
-			if (alcoholLevel > 0.9)
-				alcoholLevel = 0.9;
+		else if (FlxG.keys.pressed.RBRACKET) {
+			alcoholLevel += 0.05;
+			if (alcoholLevel > 0.99)
+				alcoholLevel = 0.99;
 		}
 		
 		if (_up && _down)
@@ -56,7 +58,7 @@ class Truck extends FlxSprite
 			}
 		}
 		
-		drag.y = alcoholLevel * 1800;
+		drag.y = 1500 * (1 - alcoholLevel);
 	}
 	
 	override public function update(): Void {
