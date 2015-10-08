@@ -1,6 +1,7 @@
 package source;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
@@ -59,6 +60,10 @@ class Truck extends FlxSprite
 		}
 		
 		drag.y = 1500 * (1 - alcoholLevel);
+	}
+	
+	public function damage(ob1: FlxObject, ob2: FlxObject) : Void {
+		// Damage the player vehicle
 	}
 	
 	override public function update(): Void {
