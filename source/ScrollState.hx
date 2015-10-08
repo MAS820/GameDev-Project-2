@@ -47,7 +47,7 @@ class ScrollState extends FlxState
 		add(text);
 		
 		//testing perposes
-		_testBTN = new FlxButton(0,0,"Change", clickToChange);
+		_testBTN = new FlxButton(200,10,"Change", clickToChange);
 		add(_testBTN);
 		////////////////////////////////////////////////////////
 	}
