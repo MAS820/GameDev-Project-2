@@ -12,7 +12,7 @@ class Truck extends FlxSprite
 	public function new(X:Float = 0, Y:Float = 0) 
 	{
 		super(X, Y);
-		makeGraphic(150, 75, FlxColor.RED);
+		loadGraphic("assets/images/car.png");
 		drag.x = drag.y = 1500;
 		speed = 200;
 		

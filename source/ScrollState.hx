@@ -21,6 +21,7 @@ class ScrollState extends FlxState
 	public var road:FlxBackdrop;
 	private var _player: Truck;
 	private var text: FlxText;
+	private var mooseArr: Array<Moose>;
 	
 	//testing perposes
 	private var _testBTN : FlxButton;
@@ -43,7 +44,9 @@ class ScrollState extends FlxState
 		_player.speed = 250;
 		add(_player);
 		
-		text = new FlxText(10, 10, 200, "Alcohol: " + _player.alcoholLevel, 14);
+		mooseArr = new Array<Moose>();
+		
+		text = new FlxText(FlxG.width - 210, 10, 200, "Alcohol: " + _player.alcoholLevel, 14);
 		add(text);
 		
 		//testing perposes
@@ -70,6 +73,33 @@ class ScrollState extends FlxState
 		super.update();
 		text.text = "Alcohol: " + _player.alcoholLevel;
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
+		updateMoose();
+	}
+	
+	// spawn moose randomly, accounting for some spacing between them
+	private function updateMoose() {
+		var shouldSpawn:Bool = true;
+		var itr: Iterator<Moose> = mooseArr.iterator();
+		for (moose in itr) {
+			moose.update();
+			// check whether or not we should spawn/remove moose
+			if (moose.x > FlxG.width / 2)
+				shouldSpawn = false;
+			else if (moose.x < -moose.width) {
+				remove(moose);
+				mooseArr.remove(moose);
+			}
+			// make the moose charge if it sees the player
+			if (Math.abs((moose.y + moose.height/2) - (_player.y)) < _player.height / 2
+					&& moose.x > _player.x) {
+				moose.charge();
+			}
+		}
+		
+		if (shouldSpawn && mooseArr.length < 2) {
+			mooseArr.push(new Moose());
+			add(mooseArr[mooseArr.length - 1]);
+		}
 	}
 	
 }
