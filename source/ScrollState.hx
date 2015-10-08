@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxTypedGroup;
@@ -89,7 +90,7 @@ class ScrollState extends FlxState
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
 		addRocks();
 		updateMoose();
-		FlxG.collide(rockGroup, mooseGroup);
+		FlxG.overlap(rockGroup, mooseGroup, blockMovement);
 	}
 	
 	// spawn moose randomly, accounting for some spacing between them
@@ -98,12 +99,6 @@ class ScrollState extends FlxState
 		var itr: Iterator<Moose> = mooseArr.iterator();
 		for (moose in itr) {
 			moose.update();
-			
-			// check collisions with rocks
-			var itr: Iterator<Rock> = rockArr.iterator();
-			for (rock in itr) {
-				FlxG.collide(rock, moose);
-			}
 			
 			// check whether or not we should spawn/remove moose
 			if (moose.x > FlxG.width / 3)
@@ -114,7 +109,7 @@ class ScrollState extends FlxState
 				mooseGroup.remove(moose);
 			}
 			// make the moose charge if it sees the player
-			if (Math.abs((moose.y + moose.height/2) - (_player.y)) < _player.height / 2
+			if (Math.abs((moose.y + moose.height/2) - (_player.y + _player.height/2)) < _player.height / 2
 					&& moose.x > _player.x) {
 				moose.charge();
 			}
@@ -149,6 +144,12 @@ class ScrollState extends FlxState
 			rockArr.push(new Rock());
 			add(rockArr[rockArr.length - 1]);
 			rockGroup.add(rockArr[rockArr.length - 1]);
+		}
+	}
+	
+	private function blockMovement(ob1:FlxObject, ob2:FlxObject) {
+		if (ob1.immovable) {
+			ob2.x = ob1.x + ob1.width;
 		}
 	}
 	
