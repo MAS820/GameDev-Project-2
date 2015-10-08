@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxGroup;
 import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxButton;
@@ -27,6 +28,7 @@ class ScrollState extends FlxState
 	private var rockArr: Array<Rock>;
 	private var mooseGroup: FlxTypedGroup<Moose>;
 	private var rockGroup: FlxTypedGroup<Rock>;
+	private var obstacleGroup: FlxGroup;
 	
 	//testing perposes
 	private var _testBTN : FlxButton;
@@ -61,6 +63,8 @@ class ScrollState extends FlxState
 		rockArr = new Array<Rock>();
 		rockGroup = new FlxTypedGroup<Rock>();
 		
+		obstacleGroup = new FlxGroup();
+		
 		text = new FlxText(FlxG.width - 210, 10, 200, "Alcohol: " + _player.alcoholLevel, 14);
 		add(text);
 		
@@ -91,6 +95,8 @@ class ScrollState extends FlxState
 		addRocks();
 		updateMoose();
 		FlxG.overlap(rockGroup, mooseGroup, blockMovement);
+		// TODO: determine if the objects need to be destroyed / how we deal with collisions
+		FlxG.overlap(_player, obstacleGroup, _player.damage);
 	}
 	
 	// spawn moose randomly, accounting for some spacing between them
@@ -107,6 +113,7 @@ class ScrollState extends FlxState
 				remove(moose);
 				mooseArr.remove(moose);
 				mooseGroup.remove(moose);
+				obstacleGroup.remove(moose);
 			}
 			// make the moose charge if it sees the player
 			if (Math.abs((moose.y + moose.height/2) - (_player.y + _player.height/2)) < _player.height / 2
@@ -121,10 +128,11 @@ class ScrollState extends FlxState
 			mooseArr.push(new Moose());
 			add(mooseArr[mooseArr.length - 1]);
 			mooseGroup.add(mooseArr[mooseArr.length - 1]);
+			obstacleGroup.add(mooseArr[mooseArr.length - 1]);
 		}
 	}
 	
-	private function addRocks() {
+	private function addRocks(): Void {
 		var shouldSpawn: Bool = true;
 		var itr: Iterator<Rock> = rockArr.iterator();
 		
@@ -135,6 +143,7 @@ class ScrollState extends FlxState
 				remove(rock);
 				rockArr.remove(rock);
 				rockGroup.remove(rock);
+				obstacleGroup.remove(rock);
 			}
 		}
 		
@@ -144,10 +153,12 @@ class ScrollState extends FlxState
 			rockArr.push(new Rock());
 			add(rockArr[rockArr.length - 1]);
 			rockGroup.add(rockArr[rockArr.length - 1]);
+			obstacleGroup.add(rockArr[rockArr.length - 1]);
+
 		}
 	}
 	
-	private function blockMovement(ob1:FlxObject, ob2:FlxObject) {
+	private function blockMovement(ob1:FlxObject, ob2:FlxObject): Void {
 		if (ob1.immovable) {
 			ob2.x = ob1.x + ob1.width;
 		}

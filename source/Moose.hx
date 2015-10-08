@@ -21,7 +21,7 @@ class Moose extends Obstacle
 		offset.x += width / 3;
 	}
 	
-	public function charge() {
+	public function charge(): Void {
 		velocity.x = -maxSpeed;
 	}
 }
