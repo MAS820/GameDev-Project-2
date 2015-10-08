@@ -1,40 +1,23 @@
 package;
 
-import flixel.FlxSprite;
-import flixel.FlxG;
-
 /**
  * ...
  * @author ...
  */
-class Moose extends FlxSprite
+class Moose extends Obstacle
 {
 	public var defaultSpeed: Float;
 	public var maxSpeed: Float;
-	private var charging: Bool;
 	
 	public function new() 
 	{
-		super(FlxG.width, Math.random() * (FlxG.height - 450) + 450);
-		loadGraphic("assets/images/moose.png", false);
-		this.y -= this.height;
+		super("assets/images/moose.png");
 		maxSpeed = 300;
 		defaultSpeed = 150;
-		charging = false;
-		
+		velocity.x = -defaultSpeed;
 	}
 	
 	public function charge() {
-		charging = true;
-	}
-	
-	override public function update() {
-		if (charging) {
-			velocity.x = -maxSpeed;
-		}
-		else {
-			velocity.x = -defaultSpeed;
-		}
-		super.update();
+		velocity.x = -maxSpeed;
 	}
 }
