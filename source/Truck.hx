@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
+import haxe.Timer;
 
 class Truck extends FlxSprite
 {
@@ -14,7 +15,7 @@ class Truck extends FlxSprite
 	{
 		super(X, Y);
 		loadGraphic("assets/images/car.png");
-		drag.x = drag.y = 1500;
+		drag.x = drag.y = 1000;
 		speed = 200;
 		
 		acceleration.x = acceleration.y = 0;
@@ -52,14 +53,20 @@ class Truck extends FlxSprite
 		
 		if (_up || _down) {
 			if (_up) {
-				velocity.y = -speed;
+				Timer.delay(velUp, Std.int(300 * alcoholLevel));
 			}
 			else if (_down) {
-				velocity.y = speed;
+				Timer.delay(velDown, Std.int(300 * alcoholLevel));
 			}
 		}
-		
-		drag.y = 1500 * (1 - alcoholLevel);
+	}
+	
+	private function velUp() {
+		velocity.y = -speed;
+	}
+	
+	private function velDown() {
+		velocity.y = speed;
 	}
 	
 	public function damage(ob1: FlxObject, ob2: FlxObject) : Void {
