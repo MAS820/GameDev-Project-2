@@ -1,4 +1,4 @@
-package source;
+package;
 
 import flixel.FlxG;
 import flixel.FlxObject;
@@ -82,7 +82,6 @@ class Truck extends FlxSprite
 			flashInvincibility();
 			Timer.delay(endInvincibility, 1500);
 			livesLeft--;
-			// TODO: game over
 		}
 	}
 	

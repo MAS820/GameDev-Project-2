@@ -12,7 +12,8 @@ import flixel.util.FlxMath;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.text.FlxText;
-import source.Truck;
+import flixel.util.FlxColor;
+import Truck;
 
 /**
  * ...
@@ -93,10 +94,13 @@ class ScrollState extends FlxState
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
 		addRocks();
 		updateMoose();
-		// TODO: determine if the objects need to be destroyed / how we deal with collisions
+		
 		FlxG.overlap(_player, obstacleGroup, _player.damage);
+		
+		if (_player.livesLeft <= 0) {
+			openSubState(new GameOverState(FlxColor.BLACK));
+		}
 		// update the HUD
-		// TODO: actually record the player health
 		scrollHud.updateHUD(_player.livesLeft, _player.alcoholLevel);
 	}
 	

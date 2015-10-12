@@ -7,7 +7,7 @@ import flixel.group.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
-import source.Truck;
+import Truck;
 using flixel.util.FlxSpriteUtil;
 
 class HUD extends FlxTypedGroup<FlxSprite>
