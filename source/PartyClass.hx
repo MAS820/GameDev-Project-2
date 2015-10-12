@@ -49,4 +49,30 @@ class PartyClass
 			return _money;
 		return 0;
 	}
+	
+	public function subInventory(t, num)
+	{
+		if (t == "booze")
+			_booze = _booze - num;
+		else if (t == "food")
+			_food = _food - num;
+		else if (t == "water")
+			_water = _water - num;
+		else if (t == "medicine")
+			_medicine = _medicine - num;
+		_money = _money - num;
+	}
+	
+	public function addInventory(t, num)
+	{
+		if (t == "booze")
+			_booze = _booze + num;
+		else if (t == "food")
+			_food = _food + num;
+		else if (t == "water")
+			_water = _water + num;
+		else if (t == "medicine")
+			_medicine = _medicine + num;
+		_money = _money + num;
+	}
 }
