@@ -13,6 +13,7 @@ import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import haxe.Timer;
 import Truck;
 
 /**
@@ -98,8 +99,13 @@ class ScrollState extends FlxState
 		FlxG.overlap(_player, obstacleGroup, _player.damage);
 		
 		if (_player.livesLeft <= 0) {
+			// make a game over
 			openSubState(new GameOverState(FlxColor.BLACK));
 		}
+		else if (_player.timeLeft <= 0) {
+			openSubState(new TransitionState(FlxColor.BLACK));
+		}
+		
 		// update the HUD
 		scrollHud.updateHUD(_player.livesLeft, _player.alcoholLevel);
 	}

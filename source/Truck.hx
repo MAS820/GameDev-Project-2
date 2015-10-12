@@ -11,6 +11,7 @@ class Truck extends FlxSprite
 	public var speed: Float;
 	public var alcoholLevel: Float;
 	public var livesLeft: Int;
+	public var timeLeft: Int;
 	private var isInvincible: Bool;
 
 	public function new(X:Float = 0, Y:Float = 0) 
@@ -28,6 +29,8 @@ class Truck extends FlxSprite
 		Timer.delay(endInvincibility, 750);
 		
 		livesLeft = 3;
+		timeLeft = 59;
+		Timer.delay(updateTimer, 1000);
 	}
 	
 	private function movement(): Void {
@@ -65,6 +68,13 @@ class Truck extends FlxSprite
 				Timer.delay(velDown, Std.int(300 * alcoholLevel));
 			}
 		}
+	}
+	
+	private function updateTimer() {
+		timeLeft--;
+		if (timeLeft < 0)
+			timeLeft = 0;
+		Timer.delay(updateTimer, 1000);
 	}
 	
 	private function velUp() {

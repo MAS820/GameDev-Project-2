@@ -4,6 +4,7 @@ import flixel.FlxSubState;
 import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.ui.FlxButton;
+import flixel.util.FlxColor;
 
 /**
  * ...
@@ -12,9 +13,9 @@ import flixel.ui.FlxButton;
 class GameOverState extends FlxSubState
 {
 
-	override public function create() 
+	public function new(BGColor:Int=FlxColor.TRANSPARENT) 
 	{
-		super.create();
+		super(BGColor);
 		var gameOverText = new FlxText(FlxG.width / 2 - 150, FlxG.height / 2, 300, "Game over...", 24);
 		gameOverText.alignment = "center";
 		add(gameOverText);

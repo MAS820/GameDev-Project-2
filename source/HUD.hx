@@ -18,6 +18,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private var _sprBack:FlxSprite;
 	private var _sprHealth: FlxSprite;
 	private var _txtHealth: FlxText;
+	private var _txtTimer: FlxText;
 	private var _player: Truck;
 
 	public function new(player) 
@@ -36,11 +37,15 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtAlcohol.alignment = "right";
 		_sprAlcohol = new FlxBar(FlxG.width - 110, 10);
 		
+		_txtTimer = new FlxText(FlxG.width / 2 - 75, 5, 150, "1:00", 48);
+		_txtTimer.alignment = "center";
+		
 		add(_sprBack);
 		add(_sprHealth);
 		add(_txtHealth);
 		add(_txtAlcohol);
 		add(_sprAlcohol);
+		add(_txtTimer);
 		
 		forEach(function(spr:FlxSprite) {
              spr.scrollFactor.set();
@@ -52,6 +57,11 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtHealth.text = Std.string(health) + " / 3";
 		_sprAlcohol.currentValue = alcoholLevel * 100;
 		_txtAlcohol.text = "Alcohol: " + Std.string(_player.alcoholLevel).substr(0, 4);
+		if (_player.timeLeft < 10) {
+			_txtTimer.text = "0:0" + Std.string(_player.timeLeft);
+		} else {
+			_txtTimer.text = "0:" + Std.string(_player.timeLeft);
+		}
 		
 		forEach(function(spr: FlxSprite) {
 			spr.update();
