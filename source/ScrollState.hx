@@ -12,7 +12,9 @@ import flixel.util.FlxMath;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.text.FlxText;
-import source.Truck;
+import flixel.util.FlxColor;
+import haxe.Timer;
+import Truck;
 
 /**
  * ...
@@ -23,7 +25,7 @@ class ScrollState extends FlxState
 	public var backdrop:FlxBackdrop;
 	public var road:FlxBackdrop;
 	private var _player: Truck;
-	private var text: FlxText;
+	private var scrollHud: HUD;
 	private var mooseArr: Array<Moose>;
 	private var rockArr: Array<Rock>;
 	private var mooseGroup: FlxTypedGroup<Moose>;
@@ -65,12 +67,12 @@ class ScrollState extends FlxState
 		
 		obstacleGroup = new FlxGroup();
 		
-		text = new FlxText(FlxG.width - 210, 10, 200, "Alcohol: " + _player.alcoholLevel, 14);
-		add(text);
-		
 		//testing perposes
 		_testBTN = new FlxButton(200,10,"Change", clickToChange);
 		add(_testBTN);
+		
+		scrollHud = new HUD(_player);
+		add(scrollHud);
 		////////////////////////////////////////////////////////
 	}
 	
@@ -90,13 +92,22 @@ class ScrollState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		text.text = "Alcohol: " + _player.alcoholLevel;
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
 		addRocks();
 		updateMoose();
-		FlxG.overlap(rockGroup, mooseGroup, blockMovement);
-		// TODO: determine if the objects need to be destroyed / how we deal with collisions
+		
 		FlxG.overlap(_player, obstacleGroup, _player.damage);
+		
+		if (_player.livesLeft <= 0) {
+			// make a game over
+			openSubState(new GameOverState(FlxColor.BLACK));
+		}
+		else if (_player.timeLeft <= 0) {
+			openSubState(new TransitionState(FlxColor.BLACK));
+		}
+		
+		// update the HUD
+		scrollHud.updateHUD(_player.livesLeft, _player.alcoholLevel);
 	}
 	
 	// spawn moose randomly, accounting for some spacing between them
