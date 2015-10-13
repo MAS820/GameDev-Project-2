@@ -43,6 +43,8 @@ class ScrollState extends FlxState
 	
 	private var party : PartyClass;
 	
+	private var minusText: FlxText;
+	
 	//FOR TESTING
 	private var _testBTN : FlxButton;
 
@@ -56,9 +58,6 @@ class ScrollState extends FlxState
 		// DEBUG MODE
 		
 		FlxG.debugger.drawDebug = true;
-		
-		// set the difficulty
-		_difficulty = 0;
 		
 		// ensure our world (collision detection) is set properly
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
@@ -100,15 +99,13 @@ class ScrollState extends FlxState
 		add(scrollHud);
 		
 		//FOR TESTING
-		_testBTN = new FlxButton(0,0,"Change", clickToChange);
+		_testBTN = new FlxButton(10,70,"Go to town", clickToChange);
 		add(_testBTN);
 	}
 	
 	public function init(diff: Int, p: PartyClass) {
-		trace("Difficulty " + diff);
 		_difficulty = diff;
 		party = p;
-		
 	}
 	
 	//-------------------------------------
@@ -125,6 +122,9 @@ class ScrollState extends FlxState
 	override public function update():Void
 	{
 		super.update();
+		
+		_player.init(party);
+		
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
 		
 		addRocks();
@@ -135,20 +135,44 @@ class ScrollState extends FlxState
 			
 		updateCollectibles();
 		
-		FlxG.overlap(rockGroup, mooseGroup, blockMovement);
 		// TODO: determine if the objects need to be destroyed / how we deal with collisions
-		FlxG.overlap(_player, obstacleGroup, _player.damage);
+		FlxG.overlap(_player, obstacleGroup, damagePlayer);
 		
-		if (_player.livesLeft <= 0) {
+		if (party._carHealth <= 0) {
 			// make a game over
 			openSubState(new GameOverState(FlxColor.BLACK));
 		}
 		else if (_player.timeLeft <= 0) {
-			openSubState(new TransitionState(FlxColor.BLACK, _difficulty, party));
+			var transition = new TransitionState(FlxColor.BLACK);
+			transition.init(_difficulty + 1, party);
+			openSubState(transition);
 		}
 		
 		// update the HUD
-		scrollHud.updateHUD(_player.livesLeft, _player.alcoholLevel);
+		scrollHud.updateHUD(party._carHealth, party._alcoholLevel);
+		
+		if (minusText != null && minusText.alpha >= 0.01) {
+			minusText.alpha -= 0.01;
+			minusText.x = _player.x + _player.width / 2 - minusText.width / 2;
+			minusText.y = _player.y - 20;
+		}
+	}
+	
+	private function damagePlayer(ob1: FlxObject, ob2: FlxObject): Void {
+		_player.takeDamage();
+		if (Math.random() * party._carHealth + 50 < 20 && party._followers > 0) {
+			party._followers--;
+			
+			remove(minusText);
+			minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
+			minusText.x -= minusText.width / 2;
+			add(minusText);
+			Timer.delay(hideText, 1500);
+		}
+	}
+	
+	private function hideText(): Void {
+		remove(minusText);
 	}
 	
 	//------------------------------------------------
@@ -249,19 +273,13 @@ class ScrollState extends FlxState
 	//--------------------------------------------
 	//---------------MISC FUNCTIONS---------------
 	//--------------------------------------------
-	private function blockMovement(ob1:FlxObject, ob2:FlxObject): Void {
-		if (ob1.immovable) {
-			ob2.x = ob1.x + ob1.width;
-		}
-	}
 	
 	//FOR TESTING
 	private function clickToChange():Void 
 	{
-		var nextTown = new TownState();
-		nextTown.init(_difficulty, party);
-		FlxG.switchState(nextTown);
-		super.create();
+		var transition = new TransitionState(FlxColor.BLACK);
+		transition.init(_difficulty + 1, party);
+		openSubState(transition);
 	}
 	
 }
