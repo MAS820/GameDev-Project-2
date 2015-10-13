@@ -41,6 +41,8 @@ class ScrollState extends FlxState
 	
 	private var _difficulty: Int;
 	
+	private var party : PartyClass;
+	
 	//FOR TESTING
 	private var _testBTN : FlxButton;
 
@@ -102,9 +104,11 @@ class ScrollState extends FlxState
 		add(_testBTN);
 	}
 	
-	public function init(diff: Int) {
+	public function init(diff: Int, p: PartyClass) {
 		trace("Difficulty " + diff);
 		_difficulty = diff;
+		party = p;
+		
 	}
 	
 	//-------------------------------------
@@ -140,7 +144,7 @@ class ScrollState extends FlxState
 			openSubState(new GameOverState(FlxColor.BLACK));
 		}
 		else if (_player.timeLeft <= 0) {
-			openSubState(new TransitionState(FlxColor.BLACK, _difficulty));
+			openSubState(new TransitionState(FlxColor.BLACK, _difficulty, party));
 		}
 		
 		// update the HUD
@@ -255,7 +259,7 @@ class ScrollState extends FlxState
 	private function clickToChange():Void 
 	{
 		var nextTown = new TownState();
-		nextTown.init(_difficulty);
+		nextTown.init(_difficulty, party);
 		FlxG.switchState(nextTown);
 		super.create();
 	}
