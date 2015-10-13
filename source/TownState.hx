@@ -14,8 +14,11 @@ class TownState extends FlxState
 {	
 	//npc group and definitions
 	private var NPCgroup : FlxGroup;
-	private var _npc : NPCsprite;
-	private var _npc2 : NPCsprite;
+	private var shopkeeper : NPCsprite;
+	private var repairperson : NPCsprite;
+	private var npc1 : NPCsprite;
+	private var npc2 : NPCsprite;
+	private var npc3 : NPCsprite;
 	
 	//Quest text and dialog
 	private var _questList : Array<QuestsClass>;
@@ -32,6 +35,7 @@ class TownState extends FlxState
 	private var buyWaterBTN : FlxButton;
 	private var buyFoodBTN : FlxButton;
 	private var buyMedicineBTN : FlxButton;
+	private var buyRepairBTN : FlxButton;
 	private var xBTN : FlxButton;
 	
 	//item counters
@@ -45,6 +49,7 @@ class TownState extends FlxState
 	private var mSprite : MouseSprite;
 	private var HUD : HUDsprite;
 	private var InventoryHUD : FlxSprite;
+	private var BG : FlxSprite;
 	
 	private var level: Int;
 	
@@ -54,24 +59,53 @@ class TownState extends FlxState
 		
 		//array of quests
 		_questList = new Array();
-		_questList = [new QuestsClass(0, "money"), new QuestsClass(5, "water")];
+		
+		//0 = shopkeeper, 1 = repair person, 2-5 = 1st stop 
+		_questList = [new QuestsClass(0, "money"), new QuestsClass(0, "money"), new QuestsClass(5, "water"),
+		new QuestsClass(5, "food"), new QuestsClass(5, "money"), new QuestsClass(5, "medicine")];
 		
 		tempType = "";
 		tempNum = 0;
 		quest = 0;
 		
 		//background
-		add(new FlxSprite(0, 0, "assets/images/townBG.png"));
+		BG = new FlxSprite(0, 0, "assets/images/City_0.png");
+		BG.scale.set(0.5,0.5);
+		BG.screenCenter();
+		add(BG);
 		
 		//npc
-		_npc = new NPCsprite(300, 300, "assets/images/npc.png", 0);
-		add(_npc);
-		_npc2 = new NPCsprite(200, 300, "assets/images/npc.png", 1);
-		add(_npc2);
 		
-		NPCgroup = new FlxGroup(2);
-		NPCgroup.add(_npc);
-		NPCgroup.add(_npc2);
+		/*
+		shopkeeper = new NPCsprite(0, 0, "assets/images/Shopkeeper.png", 0);
+		shopkeeper.y = shopkeeper.y + 50;
+		shopkeeper.scale.set(0.25, 0.25);
+		add(shopkeeper);
+		
+		repairperson = new NPCsprite(0, 0, "assets/images/Mechanic.png", 1);
+		repairperson.y = repairperson.y + 50;
+		repairperson.x = repairperson.x - 600;
+		repairperson.scale.set(0.25, 0.25);
+		add(repairperson);
+		*/
+		
+		shopkeeper = new NPCsprite(550, 300, "assets/images/npc.png", 0);
+		add(shopkeeper);
+		repairperson = new NPCsprite(300, 300, "assets/images/npc.png", 1);
+		add(repairperson);
+		npc1 = new NPCsprite(50, 300, "assets/images/npc.png", 2);
+		add(npc1);
+		npc2 = new NPCsprite(800, 300, "assets/images/npc.png", 3);
+		add(npc2);
+		npc3 = new NPCsprite(800, 450, "assets/images/npc.png", 4);
+		add(npc3);
+		
+		NPCgroup = new FlxGroup(5);
+		NPCgroup.add(shopkeeper);
+		NPCgroup.add(repairperson);
+		NPCgroup.add(npc1);
+		NPCgroup.add(npc2);
+		NPCgroup.add(npc3);
 		
 		//Leave Town Button
 		leaveBTN = new FlxButton(FlxG.width-100, FlxG.height-700, "Leave Town", leaveTown);
@@ -79,7 +113,7 @@ class TownState extends FlxState
 		
 		//HUD
 		HUD = new HUDsprite();
-		HUD.makeGraphic(700, 500, FlxColor.BLACK);
+		HUD.makeGraphic(700, 300, FlxColor.BLACK);
 		add(HUD);
 		HUD.screenCenter();
 		HUD.visible = false;
@@ -88,12 +122,13 @@ class TownState extends FlxState
 		InventoryHUD = new FlxSprite();
 		InventoryHUD.loadGraphic("assets/images/HotBar_2.png");
 		InventoryHUD.scale.set(0.35, 0.35);
-		InventoryHUD.x = FlxG.width - (InventoryHUD.width*.85);
+		InventoryHUD.x = FlxG.width - (InventoryHUD.width * .85);
+		InventoryHUD.y = FlxG.height - (InventoryHUD.height * 1.18);
 		add(InventoryHUD);
 		
 		
 		//Give button
-		giveBTN = new FlxButton(HUD.x+(HUD.x*2)+30,HUD.y+(HUD.y*4),"Give", checkInventory);
+		giveBTN = new FlxButton(FlxG.width/2,HUD.y + HUD.y+50,"Give", checkInventory);
 		add(giveBTN);
 		giveBTN.visible = false;
 		
@@ -103,17 +138,20 @@ class TownState extends FlxState
 		xBTN.visible = false;
 		
 		//shop buttons
-		buyWaterBTN = new FlxButton(HUD.x+500,HUD.y+(HUD.y*4),"water", buyWater);
-		buyFoodBTN = new FlxButton(HUD.x+350,HUD.y+(HUD.y*4),"food", buyFood);
-		buyMedicineBTN = new FlxButton(HUD.x+200,HUD.y+(HUD.y*4),"medicine", buyMedicine);
+		buyWaterBTN = new FlxButton(FlxG.width/2,HUD.y + HUD.y+50,"water", buyWater);
+		buyFoodBTN = new FlxButton(FlxG.width/2 + 100,HUD.y + HUD.y+50,"food", buyFood);
+		buyMedicineBTN = new FlxButton(FlxG.width/2 - 100,HUD.y + HUD.y+50,"medicine", buyMedicine);
+		buyRepairBTN = new FlxButton(FlxG.width/2,HUD.y + HUD.y+50, "repair", repairCar);
 		
 		add(buyFoodBTN);
 		add(buyMedicineBTN);
 		add(buyWaterBTN);
+		add(buyRepairBTN);
 		
 		buyFoodBTN.visible = false;
 		buyMedicineBTN.visible = false;
 		buyWaterBTN.visible = false;
+		buyRepairBTN.visible = false;
 		
 		//Quest text
 		questText = new FlxText(HUD.x, HUD.y+30, HUD.width);
@@ -122,25 +160,25 @@ class TownState extends FlxState
 		questText.visible = false;
 		
 		//inventory counters
-		numFood = new FlxText(322,672);
+		numFood = new FlxText(322,122);
 		numFood.text = Std.string(party.getNum("food"));
 		numFood.size = 15;
 		numFood.color = FlxColor.RED;
 		add(numFood);
 		
-		numWater = new FlxText(405,672);
+		numWater = new FlxText(406,122);
 		numWater.text = Std.string(party.getNum("water"));
 		numWater.size = 15;
 		numWater.color = FlxColor.RED;
 		add(numWater);
 		
-		numMoney = new FlxText(488,672);
+		numMoney = new FlxText(488,122);
 		numMoney.text = Std.string(party.getNum("money"));
 		numMoney.size = 15;
 		numMoney.color = FlxColor.RED;
 		add(numMoney);
 		
-		numMedicine = new FlxText(571,672);
+		numMedicine = new FlxText(575,122);
 		numMedicine.text = Std.string(party.getNum("medicine"));
 		numMedicine.size = 15;
 		numMedicine.color = FlxColor.RED;
@@ -185,6 +223,16 @@ class TownState extends FlxState
 				buyMedicineBTN.visible = true;
 				buyWaterBTN.visible = true;
 				xBTN.visible = true;
+			}else if (obj._questNum == 1) 
+			{
+				//Replace with creating a quest HUD for a shop
+				questText.text = "Need repairs? $5 for 10 health";
+				
+				//construct questHUD for a shop
+				questText.visible = true;
+				HUD.visible = true;
+				buyRepairBTN.visible = true;
+				xBTN.visible = true;
 			}else{
 				//Replace with creating a quest HUD
 				questText.text = _questList[obj._questNum]._dialog;
@@ -203,6 +251,19 @@ class TownState extends FlxState
 	
 	//used to buy items from the shop
 	//////////////////////////////////////////////////////
+	public function repairCar():Void
+	{
+		if (buyRepairBTN.visible == true)
+		{
+			if (party.getNum("money") >= 5 && party._carHealth < 100)
+			{
+				party._money = party._money - 5;
+				party._carHealth = party._carHealth + 10;
+				updateItemCounters();
+			}
+		}
+	}
+	
 	public function buyWater():Void
 	{
 		if (buyWaterBTN.visible == true)
@@ -278,6 +339,7 @@ class TownState extends FlxState
 			buyFoodBTN.visible = false;
 			buyMedicineBTN.visible = false;
 			buyWaterBTN.visible = false;
+			buyRepairBTN.visible = false;
 			xBTN.visible = false;
 		}
 	}
