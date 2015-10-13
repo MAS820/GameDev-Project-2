@@ -1,5 +1,7 @@
 package;
 
+import flixel.FlxG;
+
 /**
  * ...
  * @author ...
@@ -17,11 +19,11 @@ class Whirlwind extends Obstacle
 	override public function update():Void
 	{
 		super.update();
-		//if (position is at max) {
-			//velocity.y = SpeedY;
-		//}
-		//else if (position is at min) {
-			//velocity.y = SpeedY;
-		//}
+		if (this.y == FlxG.height) {
+			velocity.y = -SpeedY;
+		}
+		else if (this.y == (FlxG.height - 450) + 450) {
+			velocity.y = SpeedY;
+		}
 	}
 }

@@ -130,6 +130,7 @@ class ScrollState extends FlxState
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
 		
 		addRocks();
+		updateWhirlwind();
 		
 		// for levels past the first, add moose
 		if (party._level > 0)
@@ -244,6 +245,36 @@ class ScrollState extends FlxState
 			rockGroup.add(rockArr[rockArr.length - 1]);
 			obstacleGroup.add(rockArr[rockArr.length - 1]);
 
+		}
+	}
+	
+	private function updateWhirlwind():Void
+	{
+		var spawn:Bool = true;
+		var itr:Iterator<Whirlwind> = whirlArr.iterator();
+		
+		for (whirlwind in itr) {
+			if (whirlwind.x > FlxG.width / 2)
+			{
+				spawn = false;
+			}
+			else if (whirlwind.x < -whirlwind.width)
+			{
+				remove(whirlwind);
+				whirlArr.remove(whirlwind);
+				whirlGroup.remove(whirlwind);
+				obstacleGroup.remove(whirlwind);
+			}
+		}
+		
+		spawn = spawn && (Math.random() < .05);
+		
+		if (spawn && whirlArr.length < 1)
+		{
+			whirlArr.push(new Whirlwind());
+			add(whirlArr[whirlArr.length - 1]);
+			whirlGroup.add(whirlArr[whirlArr.length - 1]);
+			obstacleGroup.add(whirlArr[whirlArr.length - 1]);
 		}
 	}
 	
