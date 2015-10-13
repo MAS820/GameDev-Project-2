@@ -47,11 +47,12 @@ class TownState extends FlxState
 	//screen stuff
 	private var party : PartyClass;
 	private var mSprite : MouseSprite;
-	private var HUD : HUDsprite;
+	private var questHUD : HUDsprite;
 	private var InventoryHUD : FlxSprite;
 	private var BG : FlxSprite;
 	
 	private var level: Int;
+	private var scrollHud: HUD;
 	
     override public function create():Void
     {
@@ -107,16 +108,23 @@ class TownState extends FlxState
 		NPCgroup.add(npc2);
 		NPCgroup.add(npc3);
 		
+		//scroll HUD
+		var tempTruck = new Truck();
+		tempTruck.init(party);
+		scrollHud = new HUD(tempTruck);
+		scrollHud._txtTimer.visible = false;
+		add(scrollHud);
+		
 		//Leave Town Button
-		leaveBTN = new FlxButton(FlxG.width-100, FlxG.height-700, "Leave Town", leaveTown);
+		leaveBTN = new FlxButton(FlxG.width / 2 + 350, 80, "Leave Town", leaveTown);
 		add(leaveBTN);
 		
 		//HUD
-		HUD = new HUDsprite();
-		HUD.makeGraphic(700, 300, FlxColor.BLACK);
-		add(HUD);
-		HUD.screenCenter();
-		HUD.visible = false;
+		questHUD = new HUDsprite();
+		questHUD.makeGraphic(700, 300, FlxColor.BLACK);
+		add(questHUD);
+		questHUD.screenCenter();
+		questHUD.visible = false;
 		
 		//inventory HUD
 		InventoryHUD = new FlxSprite();
@@ -128,20 +136,20 @@ class TownState extends FlxState
 		
 		
 		//Give button
-		giveBTN = new FlxButton(FlxG.width/2,HUD.y + HUD.y+50,"Give", checkInventory);
+		giveBTN = new FlxButton(FlxG.width/2,questHUD.y + questHUD.y+50,"Give", checkInventory);
 		add(giveBTN);
 		giveBTN.visible = false;
 		
 		//x out button
-		xBTN = new FlxButton(HUD.x + 600, HUD.y+5, "X", closeQuest);
+		xBTN = new FlxButton(questHUD.x + 600, questHUD.y+5, "X", closeQuest);
 		add(xBTN);
 		xBTN.visible = false;
 		
 		//shop buttons
-		buyWaterBTN = new FlxButton(FlxG.width/2,HUD.y + HUD.y+50,"water", buyWater);
-		buyFoodBTN = new FlxButton(FlxG.width/2 + 100,HUD.y + HUD.y+50,"food", buyFood);
-		buyMedicineBTN = new FlxButton(FlxG.width/2 - 100,HUD.y + HUD.y+50,"medicine", buyMedicine);
-		buyRepairBTN = new FlxButton(FlxG.width/2,HUD.y + HUD.y+50, "repair", repairCar);
+		buyWaterBTN = new FlxButton(FlxG.width/2,questHUD.y + questHUD.y+50,"water", buyWater);
+		buyFoodBTN = new FlxButton(FlxG.width/2 + 100,questHUD.y + questHUD.y+50,"food", buyFood);
+		buyMedicineBTN = new FlxButton(FlxG.width/2 - 100,questHUD.y + questHUD.y+50,"medicine", buyMedicine);
+		buyRepairBTN = new FlxButton(FlxG.width/2,questHUD.y + questHUD.y+50, "repair", repairCar);
 		
 		add(buyFoodBTN);
 		add(buyMedicineBTN);
@@ -154,7 +162,7 @@ class TownState extends FlxState
 		buyRepairBTN.visible = false;
 		
 		//Quest text
-		questText = new FlxText(HUD.x, HUD.y+30, HUD.width);
+		questText = new FlxText(questHUD.x, questHUD.y+30, questHUD.width);
 		questText.size = 25;
 		add(questText);	
 		questText.visible = false;
@@ -198,6 +206,8 @@ class TownState extends FlxState
 		//checks what mSprite is overlapping
 		FlxG.overlap(mSprite, NPCgroup, checkClickOn);
 		
+		scrollHud.updateHUD(party._carHealth, party._alcoholLevel);
+		
         super.update();
     }
 	
@@ -218,7 +228,7 @@ class TownState extends FlxState
 				
 				//construct questHUD for a shop
 				questText.visible = true;
-				HUD.visible = true;
+				questHUD.visible = true;
 				buyFoodBTN.visible = true;
 				buyMedicineBTN.visible = true;
 				buyWaterBTN.visible = true;
@@ -230,7 +240,7 @@ class TownState extends FlxState
 				
 				//construct questHUD for a shop
 				questText.visible = true;
-				HUD.visible = true;
+				questHUD.visible = true;
 				buyRepairBTN.visible = true;
 				xBTN.visible = true;
 			}else{
@@ -242,7 +252,7 @@ class TownState extends FlxState
 				
 				//construct questHUD
 				questText.visible = true;
-				HUD.visible = true;
+				questHUD.visible = true;
 				giveBTN.visible = true;
 				xBTN.visible = true;
 			}
@@ -257,9 +267,16 @@ class TownState extends FlxState
 		{
 			if (party.getNum("money") >= 5 && party._carHealth < 100)
 			{
-				party._money = party._money - 5;
-				party._carHealth = party._carHealth + 10;
-				updateItemCounters();
+				if (100 - party._carHealth < 10)
+				{
+					party._money = party._money - 5;
+					party._carHealth = party._carHealth + (100 - party._carHealth);
+					updateItemCounters();
+				}else{
+					party._money = party._money - 5;
+					party._carHealth = party._carHealth + 10;
+					updateItemCounters();
+				}
 			}
 		}
 	}
@@ -333,7 +350,7 @@ class TownState extends FlxState
 	{
 		if (xBTN.visible == true)
 		{
-			HUD.visible = false;
+			questHUD.visible = false;
 			questText.visible = false;
 			giveBTN.visible = false;
 			buyFoodBTN.visible = false;
@@ -351,6 +368,7 @@ class TownState extends FlxState
 		}
 		
 		var next = new ScrollState();
+		party._alcoholLevel = 0;
 		next.init(level + 1, party);
 		FlxG.switchState(next);
 	}
