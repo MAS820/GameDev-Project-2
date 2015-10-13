@@ -27,6 +27,7 @@ class ScrollState extends FlxState
 	private var scrollHud: HUD;
 	
 	private var _player: Truck;
+	private var party: PartyClass;
 
 	private var mooseArr: Array<Moose>;
 	private var mooseGroup: FlxTypedGroup<Moose>;
@@ -40,8 +41,6 @@ class ScrollState extends FlxState
 	private var collectibles_layer:FlxTypedGroup<Collectibles>;
 	
 	private var _difficulty: Int;
-	
-	private var party : PartyClass;
 	
 	private var minusText: FlxText;
 	private var InventoryHUD : FlxSprite;
@@ -85,6 +84,7 @@ class ScrollState extends FlxState
 		_player = new Truck(100, 450);
 		_player.speed = 250;
 		add(_player);
+		party = new PartyClass();
 		
 		mooseArr = new Array<Moose>();
 		mooseGroup = new FlxTypedGroup<Moose>();
@@ -174,6 +174,7 @@ class ScrollState extends FlxState
 		
 		// TODO: determine if the objects need to be destroyed / how we deal with collisions
 		FlxG.overlap(_player, obstacleGroup, damagePlayer);
+		FlxG.overlap(_player, collectibles_layer, getCollectible);
 		
 		if (party._carHealth <= 0) {
 			// make a game over
@@ -201,15 +202,23 @@ class ScrollState extends FlxState
 	}
 	
 	private function damagePlayer(ob1: FlxObject, ob2: FlxObject): Void {
-		_player.takeDamage();
-		if (Math.random() * party._carHealth + 50 < 20 && party._followers > 0) {
-			party._followers--;
+		if (!_player.isInvincible) {
+			// chance = 0.5(sqrt(100^2 - x^2) +/- (0..10))
+			var chanceOfLoss = Math.sqrt(10000 - (party._carHealth) * (party._carHealth));
+			chanceOfLoss += Math.random() * 10 - 5;
+			chanceOfLoss /= 2;
+			trace(Std.string(chanceOfLoss));
+			if (Math.random() * 100 < chanceOfLoss && party._followers > 0) {
+				party._followers--;
+				
+				remove(minusText);
+				minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
+				minusText.x -= minusText.width / 2;
+				add(minusText);
+				Timer.delay(hideText, 1500);
+			}
 			
-			remove(minusText);
-			minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
-			minusText.x -= minusText.width / 2;
-			add(minusText);
-			Timer.delay(hideText, 1500);
+			_player.takeDamage();
 		}
 	}
 	
@@ -283,7 +292,7 @@ class ScrollState extends FlxState
 	//---------------COLLECTIBLES FUNCTIONS---------------
 	//----------------------------------------------------
 	public function updateCollectibles():Void
-	{ // spawn random collectables randomdly
+	{ // spawn random collectables randomly
 		var spawn:Bool = true;
 		var itr:Iterator<Collectibles> = collectibleArr.iterator();
 		
@@ -310,6 +319,14 @@ class ScrollState extends FlxState
 			add(collectibleArr[collectibleArr.length -1]);
 			collectibles_layer.add(collectibleArr[collectibleArr.length -1]);
 		}
+	}
+	
+	public function getCollectible(player:FlxSprite, collect:Collectibles):Void
+	{
+		party.addInventory(collect.type, 1);
+		collectibles_layer.remove(collect);
+		collectibleArr.remove(collect);
+		remove(collect);
 	}
 	
 	//--------------------------------------------

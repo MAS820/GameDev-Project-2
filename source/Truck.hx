@@ -11,7 +11,7 @@ class Truck extends FlxSprite
 	public var speed: Float;
 	public var timeLeft: Int;
 	private var _party: PartyClass;
-	private var isInvincible: Bool;
+	public var isInvincible: Bool;
 
 	public function new(X:Float = 0, Y:Float = 0) 
 	{
@@ -57,6 +57,10 @@ class Truck extends FlxSprite
 		// skip level key
 		if (FlxG.keys.justPressed.N) {
 			timeLeft = 3;
+		}
+		
+		if (FlxG.keys.justPressed.R) {
+			_party._carHealth = 100;
 		}
 		
 		if (_up && _down)
