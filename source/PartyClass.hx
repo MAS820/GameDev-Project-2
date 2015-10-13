@@ -56,8 +56,11 @@ class PartyClass
 	
 	public function subInventory(t, num)
 	{
-		if (t == "booze")
-			_booze = _booze - num;
+		if (t == "booze") {
+			_alcoholLevel -= 5;
+			if (_alcoholLevel < 0)
+				_alcoholLevel = 0;
+		}
 		else if (t == "food")
 			_food = _food - num;
 		else if (t == "water")
@@ -70,8 +73,11 @@ class PartyClass
 	
 	public function addInventory(t, num)
 	{
-		if (t == "booze")
-			_booze = _booze + num;
+		if (t == "booze") {
+			_alcoholLevel += 5;
+			if (_alcoholLevel > 100)
+				_alcoholLevel = 100;
+		}
 		else if (t == "food")
 			_food = _food + num;
 		else if (t == "water")
