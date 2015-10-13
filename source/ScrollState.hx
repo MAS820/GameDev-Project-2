@@ -35,6 +35,9 @@ class ScrollState extends FlxState
 	private var rockArr: Array<Rock>;
 	private var rockGroup: FlxTypedGroup<Rock>;
 	
+	private var whirlArr:Array<Whirlwind>;
+	private var whirlGroup:FlxTypedGroup<Whirlwind>;
+	
 	private var obstacleGroup: FlxGroup;
 	
 	private var collectibleArr:Array<Collectibles>;
@@ -86,6 +89,9 @@ class ScrollState extends FlxState
 		
 		rockArr = new Array<Rock>();
 		rockGroup = new FlxTypedGroup<Rock>();
+		
+		whirlArr = new Array<Whirlwind>();
+		whirlGroup = new FlxTypedGroup<Whirlwind>();
 		
 		obstacleGroup = new FlxGroup();
 		
