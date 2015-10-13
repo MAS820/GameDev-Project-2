@@ -55,6 +55,11 @@ class Truck extends FlxSprite
 				alcoholLevel = 1;
 		}
 		
+		// skip level key
+		if (FlxG.keys.justPressed.N) {
+			timeLeft = 3;
+		}
+		
 		if (_up && _down)
 			_up = _down = false;
 		if (_left && _right)

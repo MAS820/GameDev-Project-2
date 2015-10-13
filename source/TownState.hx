@@ -39,6 +39,8 @@ class TownState extends FlxState
 	private var mSprite : MouseSprite;
 	private var HUD : HUDsprite;
 	
+	private var level: Int;
+	
     override public function create():Void
     {
         super.create();
@@ -126,6 +128,10 @@ class TownState extends FlxState
 		
         super.update();
     }
+	
+	public function init(lv: Int) {
+		level = lv;
+	}
 	
 	//given mSprtie and the npc who was clicked on
 	public function checkClickOn(mSprite, obj):Void
@@ -232,7 +238,13 @@ class TownState extends FlxState
 	
 	public function leaveTown():Void
 	{
-		FlxG.switchState(new ScrollState());
+		if (level + 1 >= 2) {
+			// TODO: end screen stuff
+		}
+		
+		var next = new ScrollState();
+		next.init(level + 1);
+		FlxG.switchState(next);
 	}
 
     override public function destroy():Void

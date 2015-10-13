@@ -46,7 +46,9 @@ class MenuState extends FlxState
 		
 		function startGame():Void
 		{
-			FlxG.switchState(new ScrollState());
+			var start = new ScrollState(0);
+			start.init(0);
+			FlxG.switchState(start);
 		}
 		
 		var playButton = new FlxButton(400, 300, "Play", startGame);

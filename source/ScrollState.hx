@@ -39,6 +39,8 @@ class ScrollState extends FlxState
 	private var collectibleArr:Array<Collectibles>;
 	private var collectibles_layer:FlxTypedGroup<Collectibles>;
 	
+	private var _difficulty: Int;
+	
 	//FOR TESTING
 	private var _testBTN : FlxButton;
 
@@ -52,6 +54,9 @@ class ScrollState extends FlxState
 		// DEBUG MODE
 		
 		FlxG.debugger.drawDebug = true;
+		
+		// set the difficulty
+		_difficulty = 0;
 		
 		// ensure our world (collision detection) is set properly
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
@@ -97,6 +102,11 @@ class ScrollState extends FlxState
 		add(_testBTN);
 	}
 	
+	public function init(diff: Int) {
+		trace("Difficulty " + diff);
+		_difficulty = diff;
+	}
+	
 	//-------------------------------------
 	//---------------DESTROY---------------
 	//-------------------------------------
@@ -114,7 +124,11 @@ class ScrollState extends FlxState
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
 		
 		addRocks();
-		updateMoose();
+		
+		// for levels past the first, add moose
+		if (_difficulty > 0)
+			updateMoose();
+			
 		updateCollectibles();
 		
 		FlxG.overlap(rockGroup, mooseGroup, blockMovement);
@@ -126,7 +140,7 @@ class ScrollState extends FlxState
 			openSubState(new GameOverState(FlxColor.BLACK));
 		}
 		else if (_player.timeLeft <= 0) {
-			openSubState(new TransitionState(FlxColor.BLACK));
+			openSubState(new TransitionState(FlxColor.BLACK, _difficulty));
 		}
 		
 		// update the HUD
@@ -240,7 +254,9 @@ class ScrollState extends FlxState
 	//FOR TESTING
 	private function clickToChange():Void 
 	{
-		FlxG.switchState(new TownState());
+		var nextTown = new TownState();
+		nextTown.init(_difficulty);
+		FlxG.switchState(nextTown);
 		super.create();
 	}
 	

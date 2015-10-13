@@ -12,10 +12,13 @@ import flixel.text.FlxText;
  */
 class TransitionState extends FlxSubState
 {
+	
+	private var _level: Int;
 
-	public function new(BGColor:Int=FlxColor.TRANSPARENT) 
+	public function new(BGColor:Int=FlxColor.TRANSPARENT, level:Int) 
 	{
 		super(BGColor);
+		_level = level;
 		Timer.delay(moveToTown, 2000);
 		
 		var gameOverText = new FlxText(FlxG.width / 2 - 250, FlxG.height / 2, 500, "We made it to town.", 24);
@@ -24,7 +27,9 @@ class TransitionState extends FlxSubState
 	}
 	
 	private function moveToTown() {
-		FlxG.switchState(new TownState());
+		var nextTown = new TownState();
+		nextTown.init(_level);
+		FlxG.switchState(nextTown);
 	}
 	
 }
