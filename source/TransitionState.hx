@@ -12,6 +12,9 @@ import flixel.text.FlxText;
  */
 class TransitionState extends FlxSubState
 {
+	
+	private var _level: Int;
+	private var party : PartyClass;
 
 	public function new(BGColor:Int=FlxColor.TRANSPARENT) 
 	{
@@ -23,8 +26,15 @@ class TransitionState extends FlxSubState
 		add(gameOverText);
 	}
 	
+	public function init(level: Int, p: PartyClass) {
+		_level = level;
+		party = p;
+	}
+	
 	private function moveToTown() {
-		FlxG.switchState(new TownState());
+		var nextTown = new TownState();
+		nextTown.init(_level, party);
+		FlxG.switchState(nextTown);
 	}
 	
 }

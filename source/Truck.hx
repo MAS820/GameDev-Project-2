@@ -9,10 +9,9 @@ import haxe.Timer;
 class Truck extends FlxSprite
 {
 	public var speed: Float;
-	public var alcoholLevel: Float;
-	public var livesLeft: Int;
 	public var timeLeft: Int;
-	private var isInvincible: Bool;
+	private var _party: PartyClass;
+	public var isInvincible: Bool;
 
 	public function new(X:Float = 0, Y:Float = 0) 
 	{
@@ -23,14 +22,14 @@ class Truck extends FlxSprite
 		
 		acceleration.x = acceleration.y = 0;
 		
-		alcoholLevel = 0.5;
-		
 		isInvincible = true;
 		Timer.delay(endInvincibility, 750);
-		
-		livesLeft = 3;
 		timeLeft = 59;
 		Timer.delay(updateTimer, 1000);
+	}
+	
+	public function init(p: PartyClass): Void {
+		_party = p;
 	}
 	
 	private function movement(): Void {
@@ -45,14 +44,23 @@ class Truck extends FlxSprite
 		_right = FlxG.keys.anyPressed(["RIGHT", "D"]);
 		
 		if (FlxG.keys.pressed.LBRACKET) {
-			alcoholLevel -= 0.05;
-			if (alcoholLevel < 0)
-				alcoholLevel = 0;
+			_party._alcoholLevel -= 5;
+			if (_party._alcoholLevel < 0)
+				_party._alcoholLevel = 0;
 		}
 		else if (FlxG.keys.pressed.RBRACKET) {
-			alcoholLevel += 0.05;
-			if (alcoholLevel > 1)
-				alcoholLevel = 1;
+			_party._alcoholLevel += 5;
+			if (_party._alcoholLevel > 100)
+				_party._alcoholLevel = 100;
+		}
+		
+		// skip level key
+		if (FlxG.keys.justPressed.N) {
+			timeLeft = 3;
+		}
+		
+		if (FlxG.keys.justPressed.R) {
+			_party._carHealth = 100;
 		}
 		
 		if (_up && _down)
@@ -62,10 +70,10 @@ class Truck extends FlxSprite
 		
 		if (_up || _down) {
 			if (_up) {
-				Timer.delay(velUp, Std.int(300 * alcoholLevel));
+				Timer.delay(velUp, Math.round(3 * _party._alcoholLevel));
 			}
 			else if (_down) {
-				Timer.delay(velDown, Std.int(300 * alcoholLevel));
+				Timer.delay(velDown, Math.round(3 * _party._alcoholLevel));
 			}
 		}
 	}
@@ -85,13 +93,14 @@ class Truck extends FlxSprite
 		velocity.y = speed;
 	}
 	
-	public function damage(ob1: FlxObject, ob2: FlxObject) : Void {
+	public function takeDamage() : Void {
 		if (!isInvincible) {
 			// temporarily grant invincibility
 			isInvincible = true;
 			flashInvincibility();
 			Timer.delay(endInvincibility, 1500);
-			livesLeft--;
+			
+			_party._carHealth -= Math.round(Math.random() * 10 + 20);
 		}
 	}
 	
