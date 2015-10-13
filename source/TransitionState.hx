@@ -15,15 +15,18 @@ class TransitionState extends FlxSubState
 	
 	private var _level: Int;
 
-	public function new(BGColor:Int=FlxColor.TRANSPARENT, level:Int) 
+	public function new(BGColor:Int=FlxColor.TRANSPARENT) 
 	{
 		super(BGColor);
-		_level = level;
 		Timer.delay(moveToTown, 2000);
 		
 		var gameOverText = new FlxText(FlxG.width / 2 - 250, FlxG.height / 2, 500, "We made it to town.", 24);
 		gameOverText.alignment = "center";
 		add(gameOverText);
+	}
+	
+	public function init(level: Int) {
+		_level = level;
 	}
 	
 	private function moveToTown() {

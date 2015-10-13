@@ -290,7 +290,7 @@ class TownState extends FlxState
 		}
 		
 		var next = new ScrollState();
-		next.init(level + 1);
+		next.init(level);
 		FlxG.switchState(next);
 	}
 

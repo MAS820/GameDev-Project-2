@@ -56,7 +56,7 @@ class ScrollState extends FlxState
 		FlxG.debugger.drawDebug = true;
 		
 		// set the difficulty
-		_difficulty = 0;
+		// _difficulty = 0;
 		
 		// ensure our world (collision detection) is set properly
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
@@ -103,7 +103,6 @@ class ScrollState extends FlxState
 	}
 	
 	public function init(diff: Int) {
-		trace("Difficulty " + diff);
 		_difficulty = diff;
 	}
 	
@@ -131,7 +130,6 @@ class ScrollState extends FlxState
 			
 		updateCollectibles();
 		
-		FlxG.overlap(rockGroup, mooseGroup, blockMovement);
 		// TODO: determine if the objects need to be destroyed / how we deal with collisions
 		FlxG.overlap(_player, obstacleGroup, _player.damage);
 		
@@ -140,7 +138,9 @@ class ScrollState extends FlxState
 			openSubState(new GameOverState(FlxColor.BLACK));
 		}
 		else if (_player.timeLeft <= 0) {
-			openSubState(new TransitionState(FlxColor.BLACK, _difficulty));
+			var transition = new TransitionState(FlxColor.BLACK);
+			transition.init(_difficulty + 1);
+			openSubState(transition);
 		}
 		
 		// update the HUD
@@ -245,19 +245,13 @@ class ScrollState extends FlxState
 	//--------------------------------------------
 	//---------------MISC FUNCTIONS---------------
 	//--------------------------------------------
-	private function blockMovement(ob1:FlxObject, ob2:FlxObject): Void {
-		if (ob1.immovable) {
-			ob2.x = ob1.x + ob1.width;
-		}
-	}
 	
 	//FOR TESTING
 	private function clickToChange():Void 
 	{
-		var nextTown = new TownState();
-		nextTown.init(_difficulty);
-		FlxG.switchState(nextTown);
-		super.create();
+		var transition = new TransitionState(FlxColor.BLACK);
+		transition.init(_difficulty + 1);
+		openSubState(transition);
 	}
 	
 }
