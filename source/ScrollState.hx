@@ -27,6 +27,7 @@ class ScrollState extends FlxState
 	private var scrollHud: HUD;
 	
 	private var _player: Truck;
+	private var party: PartyClass;
 
 	private var mooseArr: Array<Moose>;
 	private var mooseGroup: FlxTypedGroup<Moose>;
@@ -40,8 +41,6 @@ class ScrollState extends FlxState
 	private var collectibles_layer:FlxTypedGroup<Collectibles>;
 	
 	private var _difficulty: Int;
-	
-	private var party : PartyClass;
 	
 	private var minusText: FlxText;
 	
@@ -80,6 +79,7 @@ class ScrollState extends FlxState
 		_player = new Truck(100, 450);
 		_player.speed = 250;
 		add(_player);
+		party = new PartyClass();
 		
 		mooseArr = new Array<Moose>();
 		mooseGroup = new FlxTypedGroup<Moose>();
@@ -137,6 +137,7 @@ class ScrollState extends FlxState
 		
 		// TODO: determine if the objects need to be destroyed / how we deal with collisions
 		FlxG.overlap(_player, obstacleGroup, damagePlayer);
+		FlxG.overlap(_player, collectibles_layer, getCollectible);
 		
 		if (party._carHealth <= 0) {
 			// make a game over
@@ -249,7 +250,7 @@ class ScrollState extends FlxState
 	//---------------COLLECTIBLES FUNCTIONS---------------
 	//----------------------------------------------------
 	public function updateCollectibles():Void
-	{ // spawn random collectables randomdly
+	{ // spawn random collectables randomly
 		var spawn:Bool = true;
 		var itr:Iterator<Collectibles> = collectibleArr.iterator();
 		
@@ -276,6 +277,14 @@ class ScrollState extends FlxState
 			add(collectibleArr[collectibleArr.length -1]);
 			collectibles_layer.add(collectibleArr[collectibleArr.length -1]);
 		}
+	}
+	
+	public function getCollectible(player:FlxSprite, collect:Collectibles):Void
+	{
+		party.addInventory(collect.type, 1);
+		collectibles_layer.remove(collect);
+		collectibleArr.remove(collect);
+		remove(collect);
 	}
 	
 	//--------------------------------------------

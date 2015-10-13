@@ -74,7 +74,7 @@ class PartyClass
 			_water = _water + num;
 		else if (t == "medicine")
 			_medicine = _medicine + num;
-		else if(t == "money")
+		else if (t == "money")
 			_money = _money + num;
 	}
 }

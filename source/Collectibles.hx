@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
+import PartyClass;
 
 //party.addInventory(TYPE, num);
 
