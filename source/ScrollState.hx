@@ -12,7 +12,9 @@ import flixel.util.FlxMath;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.text.FlxText;
-import source.Truck;
+import flixel.util.FlxColor;
+import haxe.Timer;
+import Truck;
 
 /**
  * ...
@@ -22,18 +24,27 @@ class ScrollState extends FlxState
 {
 	public var backdrop:FlxBackdrop;
 	public var road:FlxBackdrop;
+	private var scrollHud: HUD;
+	
 	private var _player: Truck;
-	private var text: FlxText;
+
 	private var mooseArr: Array<Moose>;
-	private var rockArr: Array<Rock>;
 	private var mooseGroup: FlxTypedGroup<Moose>;
+	
+	private var rockArr: Array<Rock>;
 	private var rockGroup: FlxTypedGroup<Rock>;
+	
 	private var obstacleGroup: FlxGroup;
 	
-	//testing perposes
+	private var collectibleArr:Array<Collectibles>;
+	private var collectibles_layer:FlxTypedGroup<Collectibles>;
+	
+	//FOR TESTING
 	private var _testBTN : FlxButton;
-	/////////////////////////////////
 
+	//------------------------------------
+	//---------------CREATE---------------
+	//------------------------------------
 	override public function create():Void
 	{
 		super.create();
@@ -45,6 +56,9 @@ class ScrollState extends FlxState
 		// ensure our world (collision detection) is set properly
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		
+		//--------------------------------------
+		//---------------PARALLAX---------------
+		//--------------------------------------
 		backdrop = new FlxBackdrop("assets/images/backdrop.png");
 		backdrop.velocity.x = -200;
 		add(backdrop);
@@ -54,53 +68,76 @@ class ScrollState extends FlxState
 		road.velocity.x = -750;
 		add(road);
 		
+		//-------------------------------------
+		//---------------SPRITES---------------
+		//-------------------------------------
 		_player = new Truck(100, 450);
 		_player.speed = 250;
 		add(_player);
 		
 		mooseArr = new Array<Moose>();
 		mooseGroup = new FlxTypedGroup<Moose>();
+		
 		rockArr = new Array<Rock>();
 		rockGroup = new FlxTypedGroup<Rock>();
 		
 		obstacleGroup = new FlxGroup();
 		
-		text = new FlxText(FlxG.width - 210, 10, 200, "Alcohol: " + _player.alcoholLevel, 14);
-		add(text);
+		collectibleArr = new Array<Collectibles>();
+		collectibles_layer = new FlxTypedGroup<Collectibles>();
 		
-		//testing perposes
-		_testBTN = new FlxButton(200,10,"Change", clickToChange);
+		//---------------------------------
+		//---------------HUD---------------
+		//---------------------------------		
+		scrollHud = new HUD(_player);
+		add(scrollHud);
+		
+		//FOR TESTING
+		_testBTN = new FlxButton(0,0,"Change", clickToChange);
 		add(_testBTN);
-		////////////////////////////////////////////////////////
 	}
 	
-	//testing perposes
-	private function clickToChange():Void 
-	{
-		FlxG.switchState(new TownState());
-		super.create();
-	}
-	///////////////////////////////////////
-	
+	//-------------------------------------
+	//---------------DESTROY---------------
+	//-------------------------------------
 	override public function destroy():Void
 	{
 		super.destroy();
 	}
 	
+	//------------------------------------
+	//---------------UPDATE---------------
+	//------------------------------------
 	override public function update():Void
 	{
 		super.update();
-		text.text = "Alcohol: " + _player.alcoholLevel;
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
+		
 		addRocks();
 		updateMoose();
+		updateCollectibles();
+		
 		FlxG.overlap(rockGroup, mooseGroup, blockMovement);
 		// TODO: determine if the objects need to be destroyed / how we deal with collisions
 		FlxG.overlap(_player, obstacleGroup, _player.damage);
+		
+		if (_player.livesLeft <= 0) {
+			// make a game over
+			openSubState(new GameOverState(FlxColor.BLACK));
+		}
+		else if (_player.timeLeft <= 0) {
+			openSubState(new TransitionState(FlxColor.BLACK));
+		}
+		
+		// update the HUD
+		scrollHud.updateHUD(_player.livesLeft, _player.alcoholLevel);
 	}
 	
-	// spawn moose randomly, accounting for some spacing between them
-	private function updateMoose() {
+	//------------------------------------------------
+	//---------------OBSTACLE FUNCTIONS---------------
+	//------------------------------------------------
+	private function updateMoose():Void
+	{ // spawn moose randomly, accounting for some spacing between them
 		var shouldSpawn:Bool = true;
 		var itr: Iterator<Moose> = mooseArr.iterator();
 		for (moose in itr) {
@@ -158,10 +195,53 @@ class ScrollState extends FlxState
 		}
 	}
 	
+	//----------------------------------------------------
+	//---------------COLLECTIBLES FUNCTIONS---------------
+	//----------------------------------------------------
+	public function updateCollectibles():Void
+	{ // spawn random collectables randomdly
+		var spawn:Bool = true;
+		var itr:Iterator<Collectibles> = collectibleArr.iterator();
+		
+		for (collectible in itr)
+		{
+			if (collectible.x > FlxG.width / 2)
+			{
+				spawn = false;
+			}
+			else if (collectible.x < -collectible.width)
+			{
+				remove(collectible);
+				collectibleArr.remove(collectible);
+				collectibles_layer.remove(collectible);
+				//
+			}
+		}
+		
+		spawn = spawn && (Math.random() > 0.45);
+		
+		if (spawn && collectibleArr.length < 4)
+		{
+			collectibleArr.push(new Collectibles());
+			add(collectibleArr[collectibleArr.length -1]);
+			collectibles_layer.add(collectibleArr[collectibleArr.length -1]);
+		}
+	}
+	
+	//--------------------------------------------
+	//---------------MISC FUNCTIONS---------------
+	//--------------------------------------------
 	private function blockMovement(ob1:FlxObject, ob2:FlxObject): Void {
 		if (ob1.immovable) {
 			ob2.x = ob1.x + ob1.width;
 		}
+	}
+	
+	//FOR TESTING
+	private function clickToChange():Void 
+	{
+		FlxG.switchState(new TownState());
+		super.create();
 	}
 	
 }
