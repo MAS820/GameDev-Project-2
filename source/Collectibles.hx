@@ -23,27 +23,34 @@ class Collectibles extends FlxSprite
 		
 		if (typeGen >= 0.8) {
 			type = "money";
-			loadGraphic("assets/images/money.png", false, 40, 40);
+			loadGraphic("assets/images/money.png");
+			setGraphicSize(50, 0);
 		}
 		
 		else if (typeGen >= 0.6) {
 			type = "food";
-			loadGraphic("assets/images/food.png");
+			var foodType = Math.floor(Math.random() * 4);
+			loadGraphic("assets/images/food_" + Std.string(foodType) + ".png");
+			setGraphicSize(50, 0);
 		}
 		
 		else if (typeGen >= 0.4) {
 			type = "water";
 			loadGraphic("assets/images/water.png");
+			setGraphicSize(50, 0);
 		}
 		
 		else if (typeGen >= 0.2) {
 			type = "booze";
-			loadGraphic("assets/images/booze.png");
+			var boozeType = Math.floor(Math.random() * 2);
+			loadGraphic("assets/images/booze_" + Std.string(boozeType) + ".png");
+			setGraphicSize(50, 0);
 		}
 		
 		else {
 			type = "medicine";
 			loadGraphic("assets/images/medicine.png");
+			setGraphicSize(50, 0);
 		}
     }
 

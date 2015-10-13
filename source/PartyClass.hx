@@ -12,6 +12,7 @@ class PartyClass
 	public var _water : Int;
 	public var _medicine : Int;
 	public var _money : Int;
+	public var _level: Int;
 	
 	//number of followers
 	public var _followers : Int;
@@ -28,6 +29,9 @@ class PartyClass
 		_water = 0;
 		_medicine = 0;
 		_money = 100;
+		
+		// start on the first level of game
+		_level = 0;
 		
 		//number of followers
 		_followers = 0;

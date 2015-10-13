@@ -43,8 +43,6 @@ class ScrollState extends FlxState
 	private var collectibleArr:Array<Collectibles>;
 	private var collectibles_layer:FlxTypedGroup<Collectibles>;
 	
-	private var _difficulty: Int;
-	
 	private var minusText: FlxText;
 	
 	//FOR TESTING
@@ -82,7 +80,6 @@ class ScrollState extends FlxState
 		_player = new Truck(100, 450);
 		_player.speed = 250;
 		add(_player);
-		party = new PartyClass();
 		
 		mooseArr = new Array<Moose>();
 		mooseGroup = new FlxTypedGroup<Moose>();
@@ -109,8 +106,7 @@ class ScrollState extends FlxState
 		add(_testBTN);
 	}
 	
-	public function init(diff: Int, p: PartyClass) {
-		_difficulty = diff;
+	public function init(p: PartyClass) {
 		party = p;
 	}
 	
@@ -136,7 +132,7 @@ class ScrollState extends FlxState
 		addRocks();
 		
 		// for levels past the first, add moose
-		if (_difficulty > 0)
+		if (party._level > 0)
 			updateMoose();
 			
 		updateCollectibles();
@@ -151,7 +147,7 @@ class ScrollState extends FlxState
 		}
 		else if (_player.timeLeft <= 0) {
 			var transition = new TransitionState(FlxColor.BLACK);
-			transition.init(_difficulty + 1, party);
+			transition.init(party);
 			openSubState(transition);
 		}
 		
@@ -171,7 +167,6 @@ class ScrollState extends FlxState
 			var chanceOfLoss = Math.sqrt(10000 - (party._carHealth) * (party._carHealth));
 			chanceOfLoss += Math.random() * 10 - 5;
 			chanceOfLoss /= 2;
-			trace(Std.string(chanceOfLoss));
 			if (Math.random() * 100 < chanceOfLoss && party._followers > 0) {
 				party._followers--;
 				
@@ -301,7 +296,7 @@ class ScrollState extends FlxState
 	private function clickToChange():Void 
 	{
 		var transition = new TransitionState(FlxColor.BLACK);
-		transition.init(_difficulty + 1, party);
+		transition.init(party);
 		openSubState(transition);
 	}
 	
