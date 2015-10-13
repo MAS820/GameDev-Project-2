@@ -159,15 +159,23 @@ class ScrollState extends FlxState
 	}
 	
 	private function damagePlayer(ob1: FlxObject, ob2: FlxObject): Void {
-		_player.takeDamage();
-		if (Math.random() * party._carHealth + 50 < 20 && party._followers > 0) {
-			party._followers--;
+		if (!_player.isInvincible) {
+			// chance = 0.5(sqrt(100^2 - x^2) +/- (0..10))
+			var chanceOfLoss = Math.sqrt(10000 - (party._carHealth) * (party._carHealth));
+			chanceOfLoss += Math.random() * 10 - 5;
+			chanceOfLoss /= 2;
+			trace(Std.string(chanceOfLoss));
+			if (Math.random() * 100 < chanceOfLoss && party._followers > 0) {
+				party._followers--;
+				
+				remove(minusText);
+				minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
+				minusText.x -= minusText.width / 2;
+				add(minusText);
+				Timer.delay(hideText, 1500);
+			}
 			
-			remove(minusText);
-			minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
-			minusText.x -= minusText.width / 2;
-			add(minusText);
-			Timer.delay(hideText, 1500);
+			_player.takeDamage();
 		}
 	}
 	
