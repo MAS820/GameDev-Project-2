@@ -25,9 +25,9 @@ class PartyClass
 		//Inventory
 		_booze = 0;
 		_food = 0;
-		_water = 5;
+		_water = 0;
 		_medicine = 0;
-		_money = 0;
+		_money = 100;
 		
 		//number of followers
 		_followers = 0;
@@ -60,7 +60,8 @@ class PartyClass
 			_water = _water - num;
 		else if (t == "medicine")
 			_medicine = _medicine - num;
-		_money = _money - num;
+		else if(t == "money")
+			_money = _money - num;
 	}
 	
 	public function addInventory(t, num)
@@ -73,6 +74,7 @@ class PartyClass
 			_water = _water + num;
 		else if (t == "medicine")
 			_medicine = _medicine + num;
-		_money = _money + num;
+		else if(t == "money")
+			_money = _money + num;
 	}
 }

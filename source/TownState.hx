@@ -31,19 +31,28 @@ class TownState extends FlxState
 	private var giveBTN : FlxButton;
 	private var buyWaterBTN : FlxButton;
 	private var buyFoodBTN : FlxButton;
-	private var buyBoozeBTN : FlxButton;
 	private var buyMedicineBTN : FlxButton;
 	private var xBTN : FlxButton;
 	
+	//item counters
+	private var numWater : FlxText;
+	private var numFood : FlxText;
+	private var numMedicine : FlxText;
+	private var numMoney : FlxText;
+	
+	//screen stuff
 	private var party : PartyClass;
 	private var mSprite : MouseSprite;
 	private var HUD : HUDsprite;
+	private var InventoryHUD : FlxSprite;
 	
 	private var level: Int;
 	
     override public function create():Void
     {
         super.create();
+		//party variable created
+		party = new PartyClass();
 		
 		//array of quests
 		_questList = new Array();
@@ -77,6 +86,14 @@ class TownState extends FlxState
 		HUD.screenCenter();
 		HUD.visible = false;
 		
+		//inventory HUD
+		InventoryHUD = new FlxSprite();
+		InventoryHUD.loadGraphic("assets/images/HotBar_2.png");
+		InventoryHUD.scale.set(0.35, 0.35);
+		InventoryHUD.x = FlxG.width - (InventoryHUD.width*.85);
+		add(InventoryHUD);
+		
+		
 		//Give button
 		giveBTN = new FlxButton(HUD.x+(HUD.x*2)+30,HUD.y+(HUD.y*4),"Give", checkInventory);
 		add(giveBTN);
@@ -90,15 +107,12 @@ class TownState extends FlxState
 		//shop buttons
 		buyWaterBTN = new FlxButton(HUD.x+500,HUD.y+(HUD.y*4),"water", buyWater);
 		buyFoodBTN = new FlxButton(HUD.x+350,HUD.y+(HUD.y*4),"food", buyFood);
-		buyBoozeBTN = new FlxButton(HUD.x+200,HUD.y+(HUD.y*4),"booze", buyBooze);
-		buyMedicineBTN = new FlxButton(HUD.x+50,HUD.y+(HUD.y*4),"medicine", buyMedicine);
+		buyMedicineBTN = new FlxButton(HUD.x+200,HUD.y+(HUD.y*4),"medicine", buyMedicine);
 		
-		add(buyBoozeBTN);
 		add(buyFoodBTN);
 		add(buyMedicineBTN);
 		add(buyWaterBTN);
 		
-		buyBoozeBTN.visible = false;
 		buyFoodBTN.visible = false;
 		buyMedicineBTN.visible = false;
 		buyWaterBTN.visible = false;
@@ -109,13 +123,35 @@ class TownState extends FlxState
 		add(questText);	
 		questText.visible = false;
 		
+		//inventory counters
+		numFood = new FlxText(322,672);
+		numFood.text = Std.string(party.getNum("food"));
+		numFood.size = 15;
+		numFood.color = FlxColor.RED;
+		add(numFood);
+		
+		numWater = new FlxText(405,672);
+		numWater.text = Std.string(party.getNum("water"));
+		numWater.size = 15;
+		numWater.color = FlxColor.RED;
+		add(numWater);
+		
+		numMoney = new FlxText(488,672);
+		numMoney.text = Std.string(party.getNum("money"));
+		numMoney.size = 15;
+		numMoney.color = FlxColor.RED;
+		add(numMoney);
+		
+		numMedicine = new FlxText(571,672);
+		numMedicine.text = Std.string(party.getNum("medicine"));
+		numMedicine.size = 15;
+		numMedicine.color = FlxColor.RED;
+		add(numMedicine);
+		
 		//mouse sprite
 		mSprite = new MouseSprite();
 		add(mSprite);
 		FlxG.mouse.visible = false;
-		
-		//party variable created
-		party = new PartyClass();
     }
 
     override public function update():Void
@@ -146,7 +182,6 @@ class TownState extends FlxState
 				//construct questHUD for a shop
 				questText.visible = true;
 				HUD.visible = true;
-				buyBoozeBTN.visible = true;
 				buyFoodBTN.visible = true;
 				buyMedicineBTN.visible = true;
 				buyWaterBTN.visible = true;
@@ -173,8 +208,12 @@ class TownState extends FlxState
 	{
 		if (buyWaterBTN.visible == true)
 		{
-			party.addInventory("water", 1);
-			party.subInventory("money", 1);
+			if (party.getNum("money") > 0)
+			{
+				party.addInventory("water", 1);
+				party.subInventory("money", 1);
+				updateItemCounters();
+			}
 		}
 	}
 	
@@ -182,8 +221,12 @@ class TownState extends FlxState
 	{
 		if (buyFoodBTN.visible == true)
 		{
-			party.addInventory("food", 1);
-			party.subInventory("money", 1);
+			if (party.getNum("money") > 0)
+			{
+				party.addInventory("food", 1);
+				party.subInventory("money", 1);
+				updateItemCounters();
+			}
 		}
 	}
 	
@@ -191,17 +234,12 @@ class TownState extends FlxState
 	{
 		if (buyMedicineBTN.visible == true)
 		{	
-			party.addInventory("medicine", 1);
-			party.subInventory("money", 1);
-		}
-	}
-	
-	public function buyBooze():Void
-	{
-		if (buyBoozeBTN.visible == true)
-		{	
-			party.addInventory("booze", 1);
-			party.subInventory("money", 1);
+			if (party.getNum("money") > 0)
+			{
+				party.addInventory("medicine", 1);
+				party.subInventory("money", 1);
+				updateItemCounters();
+			}
 		}
 	}
 	///////////////////////////////////////////////////////
@@ -214,11 +252,21 @@ class TownState extends FlxState
 			{
 				questText.text = "COMPLETE!!!";
 				party.subInventory(tempType, tempNum);
+				party._followers = party._followers + 1;
 				giveBTN.visible = false;
+				updateItemCounters();
 			}else {
 				questText.text = "Sorry you don't have enough "+tempType;
 			}
 		}
+	}
+	
+	public function updateItemCounters():Void
+	{
+		numMoney.text = Std.string(party.getNum("money"));
+		numMedicine.text = Std.string(party.getNum("medicine"));
+		numFood.text = Std.string(party.getNum("food"));
+		numWater.text = Std.string(party.getNum("water"));
 	}
 	
 	public function closeQuest():Void
@@ -228,7 +276,6 @@ class TownState extends FlxState
 			HUD.visible = false;
 			questText.visible = false;
 			giveBTN.visible = false;
-			buyBoozeBTN.visible = false;
 			buyFoodBTN.visible = false;
 			buyMedicineBTN.visible = false;
 			buyWaterBTN.visible = false;
