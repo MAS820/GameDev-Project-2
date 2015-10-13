@@ -14,6 +14,7 @@ class TransitionState extends FlxSubState
 {
 	
 	private var _level: Int;
+	private var party : PartyClass;
 
 	public function new(BGColor:Int=FlxColor.TRANSPARENT) 
 	{
@@ -25,13 +26,14 @@ class TransitionState extends FlxSubState
 		add(gameOverText);
 	}
 	
-	public function init(level: Int) {
+	public function init(level: Int, p: PartyClass) {
 		_level = level;
+		party = p;
 	}
 	
 	private function moveToTown() {
 		var nextTown = new TownState();
-		nextTown.init(_level);
+		nextTown.init(_level, party);
 		FlxG.switchState(nextTown);
 	}
 	

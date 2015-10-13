@@ -41,6 +41,8 @@ class ScrollState extends FlxState
 	
 	private var _difficulty: Int;
 	
+	private var party : PartyClass;
+	
 	//FOR TESTING
 	private var _testBTN : FlxButton;
 
@@ -102,8 +104,10 @@ class ScrollState extends FlxState
 		add(_testBTN);
 	}
 	
-	public function init(diff: Int) {
+	public function init(diff: Int, p: PartyClass) {
 		_difficulty = diff;
+		party = p;
+		
 	}
 	
 	//-------------------------------------
@@ -139,7 +143,7 @@ class ScrollState extends FlxState
 		}
 		else if (_player.timeLeft <= 0) {
 			var transition = new TransitionState(FlxColor.BLACK);
-			transition.init(_difficulty + 1);
+			transition.init(_difficulty + 1, party);
 			openSubState(transition);
 		}
 		
@@ -250,7 +254,7 @@ class ScrollState extends FlxState
 	private function clickToChange():Void 
 	{
 		var transition = new TransitionState(FlxColor.BLACK);
-		transition.init(_difficulty + 1);
+		transition.init(_difficulty + 1, party);
 		openSubState(transition);
 	}
 	

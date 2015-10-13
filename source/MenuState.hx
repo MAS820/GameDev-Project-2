@@ -19,6 +19,7 @@ class MenuState extends FlxState
 	
 	public var backdrop:FlxBackdrop;
 	public var road:FlxBackdrop;
+	public var party:PartyClass;
 	
 	override public function create():Void
 	{
@@ -44,10 +45,12 @@ class MenuState extends FlxState
 		title.size = 64;
 		add(title);
 		
+		party = new PartyClass();
+		
 		function startGame():Void
 		{
 			var start = new ScrollState(0);
-			start.init(0);
+			start.init(0,party);
 			FlxG.switchState(start);
 		}
 		

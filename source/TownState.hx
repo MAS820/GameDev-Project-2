@@ -51,8 +51,6 @@ class TownState extends FlxState
     override public function create():Void
     {
         super.create();
-		//party variable created
-		party = new PartyClass();
 		
 		//array of quests
 		_questList = new Array();
@@ -165,8 +163,9 @@ class TownState extends FlxState
         super.update();
     }
 	
-	public function init(lv: Int) {
+	public function init(lv: Int, p : PartyClass) {
 		level = lv;
+		party = p;
 	}
 	
 	//given mSprtie and the npc who was clicked on
@@ -290,7 +289,7 @@ class TownState extends FlxState
 		}
 		
 		var next = new ScrollState();
-		next.init(level);
+		next.init(level + 1, party);
 		FlxG.switchState(next);
 	}
 
