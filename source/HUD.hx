@@ -15,8 +15,8 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	
 	private var _sprAlcohol: FlxBar;
 	private var _txtAlcohol: FlxText;
-	private var _sprBack:FlxSprite;
-	private var _sprHealth: FlxSprite;
+	private var _sprBack: FlxSprite;
+	private var _sprHealth: FlxBar;
 	private var _txtHealth: FlxText;
 	private var _txtTimer: FlxText;
 	private var _player: Truck;
@@ -30,12 +30,12 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_sprBack = new FlxSprite().makeGraphic(FlxG.width, 100, FlxColor.BLACK);
 		_sprBack.drawRect(0, 98, FlxG.width, 2, FlxColor.WHITE);
 		
-		_txtHealth = new FlxText(32, 2, 0, "3 / 3", 32);
-		_sprHealth = new FlxSprite(100, _txtHealth.y + (_txtHealth.height / 2) - 4, "assets/images/car.png");
+		_sprHealth = new FlxBar(10, 10);
+		_txtHealth = new FlxText(10, 30, 0, "Damage: ", 14);
 		
-		_txtAlcohol = new FlxText(FlxG.width - 210, 30, 200, "Alcohol: " + _player.alcoholLevel, 14);
-		_txtAlcohol.alignment = "right";
 		_sprAlcohol = new FlxBar(FlxG.width - 110, 10);
+		_txtAlcohol = new FlxText(FlxG.width - 160, 30, 160, "Alcohol: ", 14);
+		_txtAlcohol.alignment = "right";
 		
 		_txtTimer = new FlxText(FlxG.width / 2 - 75, 5, 150, "1:00", 48);
 		_txtTimer.alignment = "center";
@@ -53,10 +53,11 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	}
 	
 	
-	public function updateHUD(health: Int, alcoholLevel: Float): Void {
-		_txtHealth.text = Std.string(health) + " / 3";
-		_sprAlcohol.currentValue = alcoholLevel * 100;
-		_txtAlcohol.text = "Alcohol: " + Std.string(_player.alcoholLevel).substr(0, 4);
+	public function updateHUD(health: Float, alcoholLevel: Float): Void {
+		_txtHealth.text = "Damage: " + Std.string(Math.round(health)) + "%";
+		_sprHealth.currentValue = health;
+		_sprAlcohol.currentValue = alcoholLevel;
+		_txtAlcohol.text = "Alcohol: " + Std.string(Math.round(alcoholLevel)) + "%";
 		if (_player.timeLeft < 10) {
 			_txtTimer.text = "0:0" + Std.string(_player.timeLeft);
 		} else {

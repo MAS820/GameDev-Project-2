@@ -57,9 +57,6 @@ class ScrollState extends FlxState
 		
 		FlxG.debugger.drawDebug = true;
 		
-		// set the difficulty
-		// _difficulty = 0;
-		
 		// ensure our world (collision detection) is set properly
 		FlxG.worldBounds.set(0, 0, FlxG.width, FlxG.height);
 		
@@ -100,14 +97,13 @@ class ScrollState extends FlxState
 		add(scrollHud);
 		
 		//FOR TESTING
-		_testBTN = new FlxButton(0,0,"Change", clickToChange);
+		_testBTN = new FlxButton(10,70,"Go to town", clickToChange);
 		add(_testBTN);
 	}
 	
 	public function init(diff: Int, p: PartyClass) {
 		_difficulty = diff;
 		party = p;
-		
 	}
 	
 	//-------------------------------------
@@ -124,6 +120,9 @@ class ScrollState extends FlxState
 	override public function update():Void
 	{
 		super.update();
+		
+		_player.init(party);
+		
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
 		
 		addRocks();
@@ -135,9 +134,9 @@ class ScrollState extends FlxState
 		updateCollectibles();
 		
 		// TODO: determine if the objects need to be destroyed / how we deal with collisions
-		FlxG.overlap(_player, obstacleGroup, _player.damage);
+		FlxG.overlap(_player, obstacleGroup, _player.takeDamage);
 		
-		if (_player.livesLeft <= 0) {
+		if (party._carHealth <= 0) {
 			// make a game over
 			openSubState(new GameOverState(FlxColor.BLACK));
 		}
@@ -148,7 +147,7 @@ class ScrollState extends FlxState
 		}
 		
 		// update the HUD
-		scrollHud.updateHUD(_player.livesLeft, _player.alcoholLevel);
+		scrollHud.updateHUD(party._carHealth, party._alcoholLevel);
 	}
 	
 	//------------------------------------------------
