@@ -12,8 +12,9 @@ import flixel.util.FlxMath;
 import flixel.util.FlxSpriteUtil;
 import flixel.addons.display.FlxBackdrop;
 import flixel.text.FlxText;
-import source.Truck;
-//import source.Collectibles;
+import flixel.util.FlxColor;
+import haxe.Timer;
+import Truck;
 
 /**
  * ...
@@ -23,11 +24,10 @@ class ScrollState extends FlxState
 {
 	public var backdrop:FlxBackdrop;
 	public var road:FlxBackdrop;
-	
-	private var text: FlxText;
+	private var scrollHud: HUD;
 	
 	private var _player: Truck;
-	
+
 	private var mooseArr: Array<Moose>;
 	private var mooseGroup: FlxTypedGroup<Moose>;
 	
@@ -85,13 +85,12 @@ class ScrollState extends FlxState
 		
 		collectibleArr = new Array<Collectibles>();
 		collectibles_layer = new FlxTypedGroup<Collectibles>();
-		//add(collectibles_layer);
 		
 		//---------------------------------
 		//---------------HUD---------------
-		//---------------------------------
-		text = new FlxText(FlxG.width - 210, 10, 200, "Alcohol: " + _player.alcoholLevel, 14);
-		add(text);
+		//---------------------------------		
+		scrollHud = new HUD(_player);
+		add(scrollHud);
 		
 		//FOR TESTING
 		_testBTN = new FlxButton(0,0,"Change", clickToChange);
@@ -112,14 +111,26 @@ class ScrollState extends FlxState
 	override public function update():Void
 	{
 		super.update();
-		text.text = "Alcohol: " + _player.alcoholLevel;
 		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
+		
 		addRocks();
 		updateMoose();
 		updateCollectibles();
+		
 		FlxG.overlap(rockGroup, mooseGroup, blockMovement);
 		// TODO: determine if the objects need to be destroyed / how we deal with collisions
 		FlxG.overlap(_player, obstacleGroup, _player.damage);
+		
+		if (_player.livesLeft <= 0) {
+			// make a game over
+			openSubState(new GameOverState(FlxColor.BLACK));
+		}
+		else if (_player.timeLeft <= 0) {
+			openSubState(new TransitionState(FlxColor.BLACK));
+		}
+		
+		// update the HUD
+		scrollHud.updateHUD(_player.livesLeft, _player.alcoholLevel);
 	}
 	
 	//------------------------------------------------
