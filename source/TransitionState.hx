@@ -26,7 +26,6 @@ class TransitionState extends FlxSubState
 	
 	public function init(p: PartyClass) {
 		party = p;
-		trace(party._level);
 	}
 	
 	private function moveToTown() {

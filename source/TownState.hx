@@ -201,7 +201,6 @@ class TownState extends FlxState
 	
 	public function init(p : PartyClass) {
 		party = p;
-		trace(p._level);
 	}
 	
 	//given mSprtie and the npc who was clicked on

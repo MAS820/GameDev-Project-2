@@ -102,7 +102,6 @@ class ScrollState extends FlxState
 	
 	public function init(p: PartyClass) {
 		party = p;
-		trace(party._level);
 	}
 	
 	//-------------------------------------
@@ -142,7 +141,6 @@ class ScrollState extends FlxState
 		}
 		else if (_player.timeLeft <= 0) {
 			var transition = new TransitionState(FlxColor.BLACK);
-			trace("transition.init... " + party._level);
 			transition.init(party);
 			openSubState(transition);
 		}
