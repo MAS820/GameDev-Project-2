@@ -89,12 +89,13 @@ class Truck extends FlxSprite
 		velocity.y = speed;
 	}
 	
-	public function takeDamage(ob1: FlxObject, ob2: FlxObject) : Void {
+	public function takeDamage() : Void {
 		if (!isInvincible) {
 			// temporarily grant invincibility
 			isInvincible = true;
 			flashInvincibility();
 			Timer.delay(endInvincibility, 1500);
+			
 			_party._carHealth -= Math.round(Math.random() * 10 + 20);
 		}
 	}

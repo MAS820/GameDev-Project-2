@@ -43,6 +43,8 @@ class ScrollState extends FlxState
 	
 	private var party : PartyClass;
 	
+	private var minusText: FlxText;
+	
 	//FOR TESTING
 	private var _testBTN : FlxButton;
 
@@ -134,7 +136,7 @@ class ScrollState extends FlxState
 		updateCollectibles();
 		
 		// TODO: determine if the objects need to be destroyed / how we deal with collisions
-		FlxG.overlap(_player, obstacleGroup, _player.takeDamage);
+		FlxG.overlap(_player, obstacleGroup, damagePlayer);
 		
 		if (party._carHealth <= 0) {
 			// make a game over
@@ -148,6 +150,29 @@ class ScrollState extends FlxState
 		
 		// update the HUD
 		scrollHud.updateHUD(party._carHealth, party._alcoholLevel);
+		
+		if (minusText != null && minusText.alpha >= 0.01) {
+			minusText.alpha -= 0.01;
+			minusText.x = _player.x + _player.width / 2 - minusText.width / 2;
+			minusText.y = _player.y - 20;
+		}
+	}
+	
+	private function damagePlayer(ob1: FlxObject, ob2: FlxObject): Void {
+		_player.takeDamage();
+		if (Math.random() * party._carHealth + 50 < 20 && party._followers > 0) {
+			party._followers--;
+			
+			remove(minusText);
+			minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
+			minusText.x -= minusText.width / 2;
+			add(minusText);
+			Timer.delay(hideText, 1500);
+		}
+	}
+	
+	private function hideText(): Void {
+		remove(minusText);
 	}
 	
 	//------------------------------------------------
