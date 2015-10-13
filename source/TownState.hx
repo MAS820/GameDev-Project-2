@@ -51,8 +51,6 @@ class TownState extends FlxState
 	private var InventoryHUD : FlxSprite;
 	private var BG : FlxSprite;
 	
-	private var level: Int;
-	
     override public function create():Void
     {
         super.create();
@@ -201,9 +199,9 @@ class TownState extends FlxState
         super.update();
     }
 	
-	public function init(lv: Int, p : PartyClass) {
-		level = lv;
+	public function init(p : PartyClass) {
 		party = p;
+		trace(p._level);
 	}
 	
 	//given mSprtie and the npc who was clicked on
@@ -346,12 +344,13 @@ class TownState extends FlxState
 	
 	public function leaveTown():Void
 	{
-		if (level + 1 >= 2) {
+		if (party._level + 1 >= 3) {
 			// TODO: end screen stuff
 		}
 		
 		var next = new ScrollState();
-		next.init(level + 1, party);
+		party._level++;	// go to the next level
+		next.init(party);
 		FlxG.switchState(next);
 	}
 
