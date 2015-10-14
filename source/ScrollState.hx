@@ -137,10 +137,13 @@ class ScrollState extends FlxState
 		
 		_player.init(party);
 		
-		FlxSpriteUtil.bound(_player, 0, FlxG.width, 208, FlxG.height - 25);
+		FlxSpriteUtil.bound(_player, 0, FlxG.width, 208, FlxG.height - 25 + _player.frameHeight - _player.height);
 		
 		addRocks();
-		updateWhirlwind();
+		
+		// add whirlwind for final level
+		if (party._level > 1)
+			updateWhirlwind();
 		
 		// for levels past the first, add moose
 		if (party._level > 0)
