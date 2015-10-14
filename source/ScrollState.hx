@@ -70,7 +70,7 @@ class ScrollState extends FlxState
 		add(backdrop);
 		
 		road = new FlxBackdrop("assets/images/road.png", 0, 0, true, false);
-		road.y = 448;
+		road.y = 208;
 		road.velocity.x = -750;
 		add(road);
 		
@@ -127,7 +127,7 @@ class ScrollState extends FlxState
 		
 		_player.init(party);
 		
-		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
+		FlxSpriteUtil.bound(_player, 0, FlxG.width, 208, FlxG.height - 25);
 		
 		addRocks();
 		updateWhirlwind();
