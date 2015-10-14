@@ -3,17 +3,19 @@ package;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.FlxG;
+import flixel.group.FlxTypedGroupIterator;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.ui.FlxButton;
 import flixel.group.FlxGroup;
+import flixel.group.FlxTypedGroup;
 
 using flixel.util.FlxSpriteUtil;
 
 class TownState extends FlxState
 {	
 	//npc group and definitions
-	private var NPCgroup : FlxGroup;
+	private var NPCgroup : FlxTypedGroup<NPCsprite>;
 	private var shopkeeper : NPCsprite;
 	private var repairperson : NPCsprite;
 	private var npc1 : NPCsprite;
@@ -62,45 +64,59 @@ class TownState extends FlxState
 		
 		//0 = shopkeeper, 1 = repair person, 2-5 = 1st stop 
 		_questList = [new QuestsClass(0, "money"), new QuestsClass(0, "money"), new QuestsClass(5, "water"),
-		new QuestsClass(5, "food"), new QuestsClass(5, "money"), new QuestsClass(5, "medicine")];
+		new QuestsClass(5, "food"), new QuestsClass(5, "medicine")];
 		
 		tempType = "";
 		tempNum = 0;
 		quest = 0;
 		
 		//background
-		BG = new FlxSprite(0, 0, "assets/images/City_0.png");
+		var BGlist = new Array();
+		BGlist = ["assets/images/City_0.png", "assets/images/City_1.png", "assets/images/City_2.png"];
+		BG = new FlxSprite(0, 0, BGlist[party._level]);
 		BG.scale.set(0.5,0.5);
 		BG.screenCenter();
 		add(BG);
 		
 		//npc
 		
-		/*
+		
+
 		shopkeeper = new NPCsprite(0, 0, "assets/images/Shopkeeper.png", 0);
-		shopkeeper.y = shopkeeper.y + 50;
+		shopkeeper.y = 500;
 		shopkeeper.scale.set(0.25, 0.25);
+		shopkeeper.updateHitbox();
 		add(shopkeeper);
 		
 		repairperson = new NPCsprite(0, 0, "assets/images/Mechanic.png", 1);
-		repairperson.y = repairperson.y + 50;
-		repairperson.x = repairperson.x - 600;
+		repairperson.y = 500;
+		repairperson.x = 170;
 		repairperson.scale.set(0.25, 0.25);
+		repairperson.updateHitbox();
 		add(repairperson);
-		*/
 		
-		shopkeeper = new NPCsprite(550, 300, "assets/images/npc.png", 0);
-		add(shopkeeper);
-		repairperson = new NPCsprite(300, 300, "assets/images/npc.png", 1);
-		add(repairperson);
-		npc1 = new NPCsprite(50, 300, "assets/images/npc.png", 2);
+		npc1 = new NPCsprite(0, 0, "assets/images/Man.png", 2);
+		npc1.y = 500;
+		npc1.x = 360;
+		npc1.scale.set(0.22, 0.22);
+		npc1.updateHitbox();
 		add(npc1);
-		npc2 = new NPCsprite(800, 300, "assets/images/npc.png", 3);
+		
+		npc2 = new NPCsprite(0, 0, "assets/images/Woman.png", 3);
+		npc2.y = 500;
+		npc2.x = 570;
+		npc2.scale.set(0.22, 0.22);
+		npc2.updateHitbox();
 		add(npc2);
-		npc3 = new NPCsprite(800, 450, "assets/images/npc.png", 4);
+		
+		npc3 = new NPCsprite(0, 0, "assets/images/Man.png", 4);
+		npc3.y = 500;
+		npc3.x = 790;
+		npc3.scale.set(0.22, 0.22);
+		npc3.updateHitbox();
 		add(npc3);
 		
-		NPCgroup = new FlxGroup(5);
+		NPCgroup = new FlxTypedGroup<NPCsprite>(5);
 		NPCgroup.add(shopkeeper);
 		NPCgroup.add(repairperson);
 		NPCgroup.add(npc1);
@@ -217,42 +233,44 @@ class TownState extends FlxState
 	//given mSprtie and the npc who was clicked on
 	public function checkClickOn(mSprite, obj):Void
 	{
-		if (FlxG.mouse.justReleased)
+		if (questHUD.visible == false)
 		{
-			if (obj._questNum == 0)
+			if (FlxG.mouse.justReleased && obj.visible == true)
 			{
-				//Replace with creating a quest HUD for a shop
-				questText.text = "What chu want?";
-				
-				//construct questHUD for a shop
-				questText.visible = true;
-				questHUD.visible = true;
-				buyFoodBTN.visible = true;
-				buyMedicineBTN.visible = true;
-				buyWaterBTN.visible = true;
-				xBTN.visible = true;
-			}else if (obj._questNum == 1) 
-			{
-				//Replace with creating a quest HUD for a shop
-				questText.text = "Need repairs? $5 for 10 health";
-				
-				//construct questHUD for a shop
-				questText.visible = true;
-				questHUD.visible = true;
-				buyRepairBTN.visible = true;
-				xBTN.visible = true;
-			}else{
-				//Replace with creating a quest HUD
-				questText.text = _questList[obj._questNum]._dialog;
-				tempType = _questList[obj._questNum]._needType;
-				tempNum = _questList[obj._questNum]._needNum;
-				quest = obj._questNum;
-				
-				//construct questHUD
-				questText.visible = true;
-				questHUD.visible = true;
-				giveBTN.visible = true;
-				xBTN.visible = true;
+				if (obj._questNum == 0)
+				{
+					//Replace with creating a quest HUD for a shop
+					questText.text = "What chu want?";
+					
+					//construct questHUD for a shop
+					questText.visible = true;
+					questHUD.visible = true;
+					buyFoodBTN.visible = true;
+					buyMedicineBTN.visible = true;
+					buyWaterBTN.visible = true;
+					xBTN.visible = true;
+				}else if (obj._questNum == 1) {
+					//Replace with creating a quest HUD for a shop
+					questText.text = "Need repairs? $5 for 10 health";
+					
+					//construct questHUD for a shop
+					questText.visible = true;
+					questHUD.visible = true;
+					buyRepairBTN.visible = true;
+					xBTN.visible = true;
+				}else{
+					//Replace with creating a quest HUD
+					questText.text = _questList[obj._questNum]._dialog;
+					tempType = _questList[obj._questNum]._needType;
+					tempNum = _questList[obj._questNum]._needNum;
+					quest = obj._questNum;
+					
+					//construct questHUD
+					questText.visible = true;
+					questHUD.visible = true;
+					giveBTN.visible = true;
+					xBTN.visible = true;
+				}
 			}
 		}
 	}
@@ -329,6 +347,15 @@ class TownState extends FlxState
 				party.subInventory(tempType, tempNum);
 				party._followers = party._followers + 1;
 				giveBTN.visible = false;
+				var iter : Iterator<NPCsprite>;
+				iter = NPCgroup.iterator();
+				for (i in iter)
+				{
+					if (i._questNum == quest)
+					{
+						i.visible = false;
+					}
+				}
 				updateItemCounters();
 			}else {
 				questText.text = "Sorry you don't have enough "+tempType;
