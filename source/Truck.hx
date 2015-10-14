@@ -16,7 +16,15 @@ class Truck extends FlxSprite
 	public function new(X:Float = 0, Y:Float = 0) 
 	{
 		super(X, Y);
-		loadGraphic("assets/images/car.png");
+		loadGraphic("assets/images/truck.png");
+		setGraphicSize(200, 0);
+		updateHitbox();
+		
+		// now adjust the hitbox for reasonable collisions
+		height /= 2;
+		offset.y += height;
+		
+		// change speed variables
 		drag.x = drag.y = 1000;
 		speed = 200;
 		

@@ -16,6 +16,18 @@ class Whirlwind extends Obstacle
 		SpeedY = 100;
 		velocity.y = -SpeedY;
 		velocity.x = -400;
+		setGraphicSize(0, 100);
+		updateHitbox();
+		
+		// make a reasonable collision hitbox
+		width /= 2;
+		offset.x += width / 2;
+		
+		x = FlxG.width;
+		y = Math.random() * 490 + (FlxG.height - 490) - height;
+		if (y < (FlxG.height - 490 - height / 2)) {
+			y = FlxG.height - 490 - height / 2;
+		}
 	}
 	
 	override public function update():Void

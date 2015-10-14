@@ -17,7 +17,10 @@ class Collectibles extends FlxSprite
 	
     override public function new():Void
     {
-        super(FlxG.width, Math.random() * (FlxG.height - 450) + 450);
+        super(0, 0);
+		x = FlxG.width;
+		y = Math.random() * 490 + (FlxG.height - 490);
+
 		var typeGen:Float = Math.random();
 		velocity.x = -500;
 		
@@ -56,6 +59,11 @@ class Collectibles extends FlxSprite
 			loadGraphic("assets/images/medicine.png");
 			setGraphicSize(50, 0);
 			updateHitbox();
+		}
+		
+		y -= height;
+		if (y < (FlxG.height - 490 - height / 2)) {
+			y = FlxG.height - 490 - height / 2;
 		}
     }
 
