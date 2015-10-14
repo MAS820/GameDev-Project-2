@@ -78,10 +78,10 @@ class Truck extends FlxSprite
 		
 		if (_up || _down) {
 			if (_up) {
-				Timer.delay(velUp, Math.round(3 * _party._alcoholLevel));
+				Timer.delay(velUp, Math.round(4 * _party._alcoholLevel));
 			}
 			else if (_down) {
-				Timer.delay(velDown, Math.round(3 * _party._alcoholLevel));
+				Timer.delay(velDown, Math.round(4 * _party._alcoholLevel));
 			}
 		}
 	}
