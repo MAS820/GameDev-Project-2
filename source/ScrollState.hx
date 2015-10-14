@@ -35,6 +35,9 @@ class ScrollState extends FlxState
 	private var rockArr: Array<Rock>;
 	private var rockGroup: FlxTypedGroup<Rock>;
 	
+	private var whirlArr:Array<Whirlwind>;
+	private var whirlGroup:FlxTypedGroup<Whirlwind>;
+	
 	private var obstacleGroup: FlxGroup;
 	
 	private var collectibleArr:Array<Collectibles>;
@@ -72,27 +75,36 @@ class ScrollState extends FlxState
 		add(backdrop);
 		
 		road = new FlxBackdrop("assets/images/road.png", 0, 0, true, false);
-		road.y = 448;
+		road.y = 208;
 		road.velocity.x = -750;
 		add(road);
 		
 		//-------------------------------------
 		//---------------SPRITES---------------
 		//-------------------------------------
-		_player = new Truck(100, 450);
-		_player.speed = 250;
-		add(_player);
-		
-		mooseArr = new Array<Moose>();
-		mooseGroup = new FlxTypedGroup<Moose>();
 		
 		rockArr = new Array<Rock>();
 		rockGroup = new FlxTypedGroup<Rock>();
 		
+		mooseArr = new Array<Moose>();
+		mooseGroup = new FlxTypedGroup<Moose>();
+		
+		whirlArr = new Array<Whirlwind>();
+		whirlGroup = new FlxTypedGroup<Whirlwind>();
+		
 		obstacleGroup = new FlxGroup();
+		obstacleGroup.add(rockGroup);
+		obstacleGroup.add(mooseGroup);
+		obstacleGroup.add(whirlGroup);
+		add(obstacleGroup);
 		
 		collectibleArr = new Array<Collectibles>();
 		collectibles_layer = new FlxTypedGroup<Collectibles>();
+		add(collectibles_layer);
+		
+		_player = new Truck(100, 450);
+		_player.speed = 250;
+		add(_player);
 		
 		//---------------------------------
 		//---------------HUD---------------
@@ -146,6 +158,10 @@ class ScrollState extends FlxState
 	//-------------------------------------
 	override public function destroy():Void
 	{
+		var itr = obstacleGroup.iterator();
+		for (i in itr) {
+			i.destroy();
+		}
 		super.destroy();
 	}
 	
@@ -158,9 +174,10 @@ class ScrollState extends FlxState
 		
 		_player.init(party);
 		
-		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
+		FlxSpriteUtil.bound(_player, 0, FlxG.width, 208, FlxG.height - 25);
 		
 		addRocks();
+		updateWhirlwind();
 		
 		// for levels past the first, add moose
 		if (party._level > 0)
@@ -206,7 +223,7 @@ class ScrollState extends FlxState
 			if (Math.random() * 100 < chanceOfLoss && party._followers > 0) {
 				party._followers--;
 				
-				remove(minusText);
+				remove(minusText).destroy();
 				minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
 				minusText.x -= minusText.width / 2;
 				add(minusText);
@@ -218,7 +235,7 @@ class ScrollState extends FlxState
 	}
 	
 	private function hideText(): Void {
-		remove(minusText);
+		remove(minusText).destroy();
 	}
 	
 	//------------------------------------------------
@@ -235,10 +252,8 @@ class ScrollState extends FlxState
 			if (moose.x > FlxG.width / 3)
 				shouldSpawn = false;
 			else if (moose.x < -moose.width) {
-				remove(moose);
 				mooseArr.remove(moose);
-				mooseGroup.remove(moose);
-				obstacleGroup.remove(moose);
+				mooseGroup.remove(moose).destroy();
 			}
 			// make the moose charge if it sees the player
 			if (Math.abs((moose.y + moose.height/2) - (_player.y + _player.height/2)) < _player.height / 2
@@ -251,9 +266,7 @@ class ScrollState extends FlxState
 		
 		if (shouldSpawn && mooseArr.length < 2) {
 			mooseArr.push(new Moose());
-			add(mooseArr[mooseArr.length - 1]);
 			mooseGroup.add(mooseArr[mooseArr.length - 1]);
-			obstacleGroup.add(mooseArr[mooseArr.length - 1]);
 		}
 	}
 	
@@ -262,13 +275,11 @@ class ScrollState extends FlxState
 		var itr: Iterator<Rock> = rockArr.iterator();
 		
 		for (rock in itr) {
-			if (rock.x > FlxG.width / 2)
+			if (rock.x > 3 * FlxG.width /4)
 				shouldSpawn = false;
 			else if (rock.x < -rock.width) {
-				remove(rock);
 				rockArr.remove(rock);
-				rockGroup.remove(rock);
-				obstacleGroup.remove(rock);
+				rockGroup.remove(rock).destroy();
 			}
 		}
 		
@@ -276,10 +287,35 @@ class ScrollState extends FlxState
 		
 		if (shouldSpawn && rockArr.length < 4) {
 			rockArr.push(new Rock());
-			add(rockArr[rockArr.length - 1]);
 			rockGroup.add(rockArr[rockArr.length - 1]);
-			obstacleGroup.add(rockArr[rockArr.length - 1]);
 
+		}
+	}
+	
+	private function updateWhirlwind():Void
+	{
+		var spawn:Bool = true;
+		var itr:Iterator<Whirlwind> = whirlArr.iterator();
+		
+		for (whirlwind in itr) {
+			whirlwind.update();
+			if (whirlwind.x > FlxG.width / 2)
+			{
+				spawn = false;
+			}
+			else if (whirlwind.x < -whirlwind.width)
+			{
+				whirlArr.remove(whirlwind);
+				whirlGroup.remove(whirlwind).destroy();
+			}
+		}
+		
+		spawn = spawn && (Math.random() < .05);
+		
+		if (spawn && whirlArr.length < 1)
+		{
+			whirlArr.push(new Whirlwind());
+			whirlGroup.add(whirlArr[whirlArr.length - 1]);
 		}
 	}
 	
@@ -299,9 +335,8 @@ class ScrollState extends FlxState
 			}
 			else if (collectible.x < -collectible.width)
 			{
-				remove(collectible);
 				collectibleArr.remove(collectible);
-				collectibles_layer.remove(collectible);
+				collectibles_layer.remove(collectible).destroy();
 				//
 			}
 		}
@@ -311,7 +346,6 @@ class ScrollState extends FlxState
 		if (spawn && collectibleArr.length < 4)
 		{
 			collectibleArr.push(new Collectibles());
-			add(collectibleArr[collectibleArr.length -1]);
 			collectibles_layer.add(collectibleArr[collectibleArr.length -1]);
 		}
 	}
@@ -319,9 +353,8 @@ class ScrollState extends FlxState
 	public function getCollectible(player:FlxSprite, collect:Collectibles):Void
 	{
 		party.addInventory(collect.type, 1);
-		collectibles_layer.remove(collect);
 		collectibleArr.remove(collect);
-		remove(collect);
+		collectibles_layer.remove(collect).destroy();
 	}
 	
 	//--------------------------------------------

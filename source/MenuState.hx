@@ -30,15 +30,17 @@ class MenuState extends FlxState
 		add(backdrop);
 		
 		road = new FlxBackdrop("assets/images/road.png", 0, 0, true, false);
-		road.y = 448;
+		road.y = 475;
 		road.velocity.x = -750;
 		add(road);
 		
 		var car = new FlxSprite();
-		car.loadGraphic("assets/images/car.png");
+		car.loadGraphic("assets/images/truck.png");
+		car.setGraphicSize(200, 0);
+		car.updateHitbox();
 		add(car);
-		car.x = 400;
-		car.y = 500;
+		car.x = 390;
+		car.y = 520;
 		
 		var title = new FlxText(200, 100, 600);
 		title.text = "Ontario Trail";
