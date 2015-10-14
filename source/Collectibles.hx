@@ -16,11 +16,17 @@ class Collectibles extends FlxSprite
 	public var type:String;
 	//public var speed:Float;
 	
-    override public function new():Void
+    override public function new(alcoholOnly: Bool = false):Void
     {
         super(0, 0);
 
-		var typeGen:Float = Math.random();
+		var typeGen: Float;
+		
+		if (alcoholOnly) {
+			typeGen = 0.3;	// alcohol
+		} else {
+			typeGen = Math.random();
+		}
 		velocity.x = -500;
 		
 		if (typeGen >= 0.8) {

@@ -364,10 +364,10 @@ class ScrollState extends FlxState
 		
 		if (spawn && collectibleArr.length < 4)
 		{
-			collectibleArr.push(new Collectibles());
+			collectibleArr.push(new Collectibles(party._level > 2));
 			while (FlxG.overlap(collectibleArr[collectibleArr.length - 1], obstacleGroup)) {
 				collectibleArr.pop().destroy();
-				collectibleArr.push(new Collectibles());
+				collectibleArr.push(new Collectibles(party._level > 2));
 			}
 			collectibles_layer.add(collectibleArr[collectibleArr.length -1]);
 		}
