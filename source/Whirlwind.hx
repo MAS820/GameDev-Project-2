@@ -13,8 +13,9 @@ class Whirlwind extends Obstacle
 	public function new():Void 
 	{
 		super("assets/images/whirlwind.png");
-		SpeedY = 300;
+		SpeedY = 100;
 		velocity.y = -SpeedY;
+		velocity.x = -400;
 	}
 	
 	override public function update():Void

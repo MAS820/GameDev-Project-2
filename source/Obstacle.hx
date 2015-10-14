@@ -12,7 +12,7 @@ class Obstacle extends FlxSprite {
 		super(FlxG.width, Math.random() * (FlxG.height - 450) + 450);
 		loadGraphic(sprite, false);
 		this.y -= this.frameHeight / 2;
-		speed = 300;
+		speed = 500;
 		velocity.x = -speed;
 	}
 }

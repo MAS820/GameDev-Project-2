@@ -54,6 +54,7 @@ class TownState extends FlxState
     override public function create():Void
     {
         super.create();
+		FlxG.sound.playMusic("assets/sounds/townMusic1.ogg", 1, true);
 		
 		//array of quests
 		_questList = new Array();

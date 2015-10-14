@@ -15,8 +15,8 @@ class Moose extends Obstacle
 		loadGraphic("assets/images/moose.png", true, 575, 503);
 		setGraphicSize(150, 0);
 		updateHitbox();
-		maxSpeed = 300;
-		defaultSpeed = 150;
+		maxSpeed = 700;
+		defaultSpeed = 500;
 		velocity.x = -defaultSpeed;
 		height = height * 2 / 3;
 		offset.y += height / 2;
