@@ -121,6 +121,10 @@ class ScrollState extends FlxState
 	//-------------------------------------
 	override public function destroy():Void
 	{
+		var itr = obstacleGroup.iterator();
+		for (i in itr) {
+			i.destroy();
+		}
 		super.destroy();
 	}
 	
