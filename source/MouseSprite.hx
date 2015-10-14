@@ -10,7 +10,7 @@ class MouseSprite extends FlxSprite
     public function new()
     {
         super();
-		makeGraphic(40, 40, FlxColor.BLUE);
+		loadGraphic("assets/images/Arrow.png");
 	}
 
     override public function update():Void

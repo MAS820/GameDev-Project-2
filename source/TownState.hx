@@ -45,6 +45,7 @@ class TownState extends FlxState
 	private var numFood : FlxText;
 	private var numMedicine : FlxText;
 	private var numMoney : FlxText;
+	private var numFollower : FlxText;
 	
 	//screen stuff
 	private var party : PartyClass;
@@ -79,9 +80,6 @@ class TownState extends FlxState
 		add(BG);
 		
 		//npc
-		
-		
-
 		shopkeeper = new NPCsprite(0, 0, "assets/images/Shopkeeper.png", 0);
 		shopkeeper.y = 500;
 		shopkeeper.scale.set(0.25, 0.25);
@@ -183,32 +181,40 @@ class TownState extends FlxState
 		questText.visible = false;
 		
 		//inventory counters
-		numFood = new FlxText(322,122);
+		numFood = new FlxText(283,122);
 		numFood.text = Std.string(party.getNum("food"));
 		numFood.size = 15;
 		numFood.color = FlxColor.RED;
 		add(numFood);
 		
-		numWater = new FlxText(406,122);
+		numWater = new FlxText(366,122);
 		numWater.text = Std.string(party.getNum("water"));
 		numWater.size = 15;
 		numWater.color = FlxColor.RED;
 		add(numWater);
 		
-		numMoney = new FlxText(488,122);
+		numMoney = new FlxText(448,122);
 		numMoney.text = Std.string(party.getNum("money"));
 		numMoney.size = 15;
 		numMoney.color = FlxColor.RED;
 		add(numMoney);
 		
-		numMedicine = new FlxText(575,122);
+		numMedicine = new FlxText(535,122);
 		numMedicine.text = Std.string(party.getNum("medicine"));
 		numMedicine.size = 15;
 		numMedicine.color = FlxColor.RED;
 		add(numMedicine);
 		
+		numFollower = new FlxText(618, 122);
+		numFollower.text = Std.string(party._followers);
+		numFollower.size = 15;
+		numFollower.color = FlxColor.RED;
+		add(numFollower);
+		
 		//mouse sprite
 		mSprite = new MouseSprite();
+		mSprite.scale.set(0.2, 0.2);
+		mSprite.updateHitbox();
 		add(mSprite);
 		FlxG.mouse.visible = false;
     }
@@ -216,7 +222,7 @@ class TownState extends FlxState
     override public function update():Void
     {
 		//mSprite follows mouse
-		mSprite.setPosition(FlxG.mouse.x - 20, FlxG.mouse.y - 20);
+		mSprite.setPosition(FlxG.mouse.x -35, FlxG.mouse.y);
 		
 		//checks what mSprite is overlapping
 		FlxG.overlap(mSprite, NPCgroup, checkClickOn);
@@ -343,24 +349,55 @@ class TownState extends FlxState
 		{
 			if (_questList[quest].checkComp(party.getNum(tempType), tempNum))
 			{
-				questText.text = "COMPLETE!!!";
-				party.subInventory(tempType, tempNum);
-				party._followers = party._followers + 1;
-				giveBTN.visible = false;
-				var iter : Iterator<NPCsprite>;
-				iter = NPCgroup.iterator();
-				for (i in iter)
+				if (ScareAway() == false)
 				{
-					if (i._questNum == quest)
+					questText.text = "COMPLETE!!!";
+					party.subInventory(tempType, tempNum);
+					party._followers = party._followers + 1;
+					giveBTN.visible = false;
+					var iter : Iterator<NPCsprite>;
+					iter = NPCgroup.iterator();
+					for (i in iter)
 					{
-						i.visible = false;
+						if (i._questNum == quest)
+						{
+							i.visible = false;
+						}
+					}
+					updateItemCounters();
+				}else {
+					questText.text = "Just as you hand the supplies over, Hooch lashes out in a sober rage scaring the potential follower away.";
+					party.subInventory(tempType, tempNum);
+					giveBTN.visible = false;
+					var iter : Iterator<NPCsprite>;
+					iter = NPCgroup.iterator();
+					for (i in iter)
+					{
+						if (i._questNum == quest)
+						{
+							i.visible = false;
+						}
 					}
 				}
-				updateItemCounters();
 			}else {
 				questText.text = "Sorry you don't have enough "+tempType;
 			}
 		}
+	}
+	
+	private function ScareAway(): Bool
+	{
+		
+		// chance = 0.5(sqrt(100^2 - x^2) +/- (0..10))
+		var chanceOfLoss = Math.sqrt(10000 - (party._alcoholLevel) * (party._alcoholLevel));
+		chanceOfLoss += Math.random() * 10 - 5;
+		chanceOfLoss /= 2;
+		if (Math.random() * 100 < chanceOfLoss) {
+			return true;
+		}
+		
+		return false;
+		
 	}
 	
 	public function updateItemCounters():Void
@@ -369,6 +406,7 @@ class TownState extends FlxState
 		numMedicine.text = Std.string(party.getNum("medicine"));
 		numFood.text = Std.string(party.getNum("food"));
 		numWater.text = Std.string(party.getNum("water"));
+		numFollower.text = Std.string(party._followers);
 	}
 	
 	public function closeQuest():Void

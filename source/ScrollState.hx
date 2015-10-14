@@ -49,6 +49,7 @@ class ScrollState extends FlxState
 	private var numFood : FlxText;
 	private var numMedicine : FlxText;
 	private var numMoney : FlxText;
+	private var numFollower : FlxText;
 	
 	//FOR TESTING
 	private var _testBTN : FlxButton;
@@ -120,29 +121,35 @@ class ScrollState extends FlxState
 		InventoryHUD.y = FlxG.height - (InventoryHUD.height * 1.18);
 		add(InventoryHUD);
 		
-		numFood = new FlxText(322,122);
+		numFood = new FlxText(283,122);
 		numFood.text = Std.string(party.getNum("food"));
 		numFood.size = 15;
 		numFood.color = FlxColor.RED;
 		add(numFood);
 		
-		numWater = new FlxText(406,122);
+		numWater = new FlxText(366,122);
 		numWater.text = Std.string(party.getNum("water"));
 		numWater.size = 15;
 		numWater.color = FlxColor.RED;
 		add(numWater);
 		
-		numMoney = new FlxText(488,122);
+		numMoney = new FlxText(448,122);
 		numMoney.text = Std.string(party.getNum("money"));
 		numMoney.size = 15;
 		numMoney.color = FlxColor.RED;
 		add(numMoney);
 		
-		numMedicine = new FlxText(575,122);
+		numMedicine = new FlxText(535,122);
 		numMedicine.text = Std.string(party.getNum("medicine"));
 		numMedicine.size = 15;
 		numMedicine.color = FlxColor.RED;
 		add(numMedicine);
+		
+		numFollower = new FlxText(618, 122);
+		numFollower.text = Std.string(party._followers);
+		numFollower.size = 15;
+		numFollower.color = FlxColor.RED;
+		add(numFollower);
 		
 		//FOR TESTING
 		_testBTN = new FlxButton(10,70,"Go to town", clickToChange);
@@ -215,6 +222,7 @@ class ScrollState extends FlxState
 		numMedicine.text = Std.string(party.getNum("medicine"));
 		numFood.text = Std.string(party.getNum("food"));
 		numWater.text = Std.string(party.getNum("water"));
+		numFollower.text = Std.string(party._followers);
 	}
 	
 	private function damagePlayer(ob1: FlxObject, ob2: FlxObject): Void {
