@@ -308,7 +308,7 @@ class ScrollState extends FlxState
 		var itr: Iterator<Rock> = rockArr.iterator();
 		
 		for (rock in itr) {
-			if (rock.x > 3 * FlxG.width /4)
+			if (rock.x > 3 * FlxG.width / 5)
 				shouldSpawn = false;
 			else if (rock.x < -rock.width) {
 				rockArr.remove(rock);
@@ -321,7 +321,7 @@ class ScrollState extends FlxState
 		else
 			shouldSpawn = shouldSpawn && (FlxRandom.float() > 0.8) && rockArr.length < 3;
 		
-		if (shouldSpawn && rockArr.length < 4) {
+		if (shouldSpawn) {
 			rockArr.push(new Rock());
 			while (FlxG.overlap(rockArr[rockArr.length - 1], obstacleGroup) ||
 					FlxG.overlap(rockArr[rockArr.length - 1], collectibles_layer)) {
