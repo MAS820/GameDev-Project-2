@@ -25,8 +25,8 @@ class Truck extends FlxSprite
 		offset.y += height;
 		
 		// change speed variables
-		drag.x = drag.y = 1000;
-		speed = 200;
+		drag.x = drag.y = 1500;
+		speed = 400;
 		
 		acceleration.x = acceleration.y = 0;
 		
@@ -101,14 +101,14 @@ class Truck extends FlxSprite
 		velocity.y = speed;
 	}
 	
-	public function takeDamage() : Void {
+	public function takeDamage(amount: Int) : Void {
 		if (!isInvincible) {
 			// temporarily grant invincibility
 			isInvincible = true;
 			flashInvincibility();
 			Timer.delay(endInvincibility, 1500);
 			
-			_party._carHealth -= Math.round(Math.random() * 10 + 20);
+			_party._carHealth -= amount;
 		}
 	}
 	

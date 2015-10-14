@@ -31,6 +31,8 @@ class WinState extends FlxState
 		var resetButton = new FlxButton(FlxG.width / 2, FlxG.height / 6 + 72, "Start over", startOver);
 		resetButton.x -= resetButton.width / 2;
 		add(resetButton);
+		
+		FlxG.mouse.load();
 	}
 	
 	function startOver():Void

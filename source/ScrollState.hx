@@ -61,6 +61,8 @@ class ScrollState extends FlxState
 	override public function create():Void
 	{
 		super.create();
+	
+		FlxG.mouse.visible = false;
 		
 		// FlxG.sound.playMusic("assets/sounds/scrollMusic.ogg", 1, true);
 		
@@ -108,7 +110,6 @@ class ScrollState extends FlxState
 		add(collectibles_layer);
 		
 		_player = new Truck(100, 450);
-		_player.speed = 250;
 		add(_player);
 		
 		//---------------------------------
@@ -247,7 +248,15 @@ class ScrollState extends FlxState
 				Timer.delay(hideText, 1500);
 			}
 			
-			_player.takeDamage();
+			if (Type.getClassName(Type.getClass(ob2)) == "Rock") {
+				_player.takeDamage(5);
+			}
+			else if (Type.getClassName(Type.getClass(ob2)) == "Moose") {
+				_player.takeDamage(7);
+			}
+			else {
+				_player.takeDamage(10);
+			}
 		}
 	}
 	
@@ -279,7 +288,7 @@ class ScrollState extends FlxState
 			}
 		}
 		
-		shouldSpawn = shouldSpawn && (FlxRandom.float() > 0.85);
+		shouldSpawn = shouldSpawn && (FlxRandom.float() > 0.95);
 		
 		if (shouldSpawn && mooseArr.length < 2) {
 			mooseArr.push(new Moose());
@@ -306,7 +315,10 @@ class ScrollState extends FlxState
 			}
 		}
 		
-		shouldSpawn = shouldSpawn && (FlxRandom.float() > 0.5);
+		if (party._level == 0)
+			shouldSpawn = shouldSpawn && (FlxRandom.float() > 0.5) && rockArr.length < 4;
+		else
+			shouldSpawn = shouldSpawn && (FlxRandom.float() > 0.8) && rockArr.length < 3;
 		
 		if (shouldSpawn && rockArr.length < 4) {
 			rockArr.push(new Rock());
@@ -338,7 +350,7 @@ class ScrollState extends FlxState
 			}
 		}
 		
-		spawn = spawn && (FlxRandom.float() < .05);
+		spawn = spawn && (FlxRandom.float() < 0.01);
 		
 		if (spawn && whirlArr.length < 1)
 		{
