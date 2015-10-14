@@ -247,7 +247,7 @@ class TownState extends FlxState
 				if (obj._questNum == 0)
 				{
 					//Replace with creating a quest HUD for a shop
-					questText.text = "What chu want?";
+					questText.text = "How may I help you? Everything is $1!";
 					
 					//construct questHUD for a shop
 					questText.visible = true;

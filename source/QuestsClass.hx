@@ -15,7 +15,7 @@ class QuestsClass
 	{
 		_needNum = num;
 		_needType = type;
-		_dialog = "need "+Std.string(_needNum)+" many "+_needType;
+		_dialog = "If you give me "+Std.string(_needNum)+" many "+_needType+" I'll be able to join your party";
 	}
 	
 	public function checkComp(have, need)
