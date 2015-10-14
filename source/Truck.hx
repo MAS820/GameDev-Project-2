@@ -50,7 +50,7 @@ class Truck extends FlxSprite
 		_down = FlxG.keys.anyPressed(["DOWN", "S"]);
 		_left = FlxG.keys.anyPressed(["LEFT", "A"]);
 		_right = FlxG.keys.anyPressed(["RIGHT", "D"]);
-		
+		/*
 		if (FlxG.keys.pressed.LBRACKET) {
 			_party._alcoholLevel -= 5;
 			if (_party._alcoholLevel < 0)
@@ -69,7 +69,7 @@ class Truck extends FlxSprite
 		
 		if (FlxG.keys.justPressed.R) {
 			_party._carHealth = 100;
-		}
+		} */
 		
 		if (_up && _down)
 			_up = _down = false;
