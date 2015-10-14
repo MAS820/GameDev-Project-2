@@ -12,6 +12,7 @@ class PartyClass
 	public var _water : Int;
 	public var _medicine : Int;
 	public var _money : Int;
+	public var _level: Int;
 	
 	//number of followers
 	public var _followers : Int;
@@ -28,6 +29,9 @@ class PartyClass
 		_water = 0;
 		_medicine = 0;
 		_money = 100;
+		
+		// start on the first level of game
+		_level = 0;
 		
 		//number of followers
 		_followers = 0;
@@ -52,8 +56,11 @@ class PartyClass
 	
 	public function subInventory(t, num)
 	{
-		if (t == "booze")
-			_booze = _booze - num;
+		if (t == "booze") {
+			_alcoholLevel -= 5;
+			if (_alcoholLevel < 0)
+				_alcoholLevel = 0;
+		}
 		else if (t == "food")
 			_food = _food - num;
 		else if (t == "water")
@@ -66,8 +73,11 @@ class PartyClass
 	
 	public function addInventory(t, num)
 	{
-		if (t == "booze")
-			_booze = _booze + num;
+		if (t == "booze") {
+			_alcoholLevel += 5;
+			if (_alcoholLevel > 100)
+				_alcoholLevel = 100;
+		}
 		else if (t == "food")
 			_food = _food + num;
 		else if (t == "water")

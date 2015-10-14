@@ -53,7 +53,6 @@ class TownState extends FlxState
 	
 	private var level: Int;
 	private var scrollHud: HUD;
-	
     override public function create():Void
     {
         super.create();
@@ -211,8 +210,7 @@ class TownState extends FlxState
         super.update();
     }
 	
-	public function init(lv: Int, p : PartyClass) {
-		level = lv;
+	public function init(p : PartyClass) {
 		party = p;
 	}
 	
@@ -363,13 +361,15 @@ class TownState extends FlxState
 	
 	public function leaveTown():Void
 	{
-		if (level + 1 >= 2) {
+		if (party._level + 1 >= 3) {
 			// TODO: end screen stuff
 		}
 		
 		var next = new ScrollState();
 		party._alcoholLevel = 0;
-		next.init(level + 1, party);
+		next.init(party);
+		party._level++;	// go to the next level
+		next.init(party);
 		FlxG.switchState(next);
 	}
 
