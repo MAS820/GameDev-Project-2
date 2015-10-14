@@ -12,6 +12,9 @@ class Moose extends Obstacle
 	public function new() 
 	{
 		super("assets/images/moose.png");
+		loadGraphic("assets/images/moose.png", true, 575, 503);
+		setGraphicSize(150, 0);
+		updateHitbox();
 		maxSpeed = 300;
 		defaultSpeed = 150;
 		velocity.x = -defaultSpeed;
@@ -19,9 +22,11 @@ class Moose extends Obstacle
 		offset.y += height / 2;
 		width = width * 3 / 4;
 		offset.x += width / 3;
+		
 	}
 	
 	public function charge(): Void {
+		animation.frameIndex = 1;
 		velocity.x = -maxSpeed;
 	}
 }

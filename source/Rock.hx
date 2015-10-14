@@ -10,5 +10,7 @@ class Rock extends Obstacle
 	{
 		super("assets/images/rock.png");
 		this.immovable = true;
+		setGraphicSize(150, 0);
+		updateHitbox();
 	}
 }
