@@ -237,7 +237,7 @@ class ScrollState extends FlxState
 			// chance = 0.5(sqrt(100^2 - x^2) +/- (0..10))
 			var chanceOfLoss = Math.sqrt(10000 - (party._carHealth) * (party._carHealth));
 			chanceOfLoss += FlxRandom.floatRanged(-5, 5);
-			chanceOfLoss /= 2;
+			chanceOfLoss /= 4;
 			if (FlxRandom.floatRanged(0, 100) < chanceOfLoss && party._followers > 0) {
 				party._followers--;
 				var txt = remove(minusText);
