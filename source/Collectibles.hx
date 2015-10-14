@@ -2,6 +2,7 @@ package;
 
 import flixel.FlxSprite;
 import flixel.FlxG;
+import flixel.util.FlxRandom;
 import PartyClass;
 
 //party.addInventory(TYPE, num);
@@ -18,8 +19,6 @@ class Collectibles extends FlxSprite
     override public function new():Void
     {
         super(0, 0);
-		x = FlxG.width;
-		y = Math.random() * 490 + (FlxG.height - 490);
 
 		var typeGen:Float = Math.random();
 		velocity.x = -300;
@@ -61,10 +60,10 @@ class Collectibles extends FlxSprite
 			updateHitbox();
 		}
 		
-		y -= height;
-		if (y < (FlxG.height - 490 - height / 2)) {
-			y = FlxG.height - 490 - height / 2;
-		}
+		FlxRandom.resetGlobalSeed();
+		
+		x = FlxG.width;
+		y = FlxRandom.floatRanged(FlxG.height - 490 - height / 2, FlxG.height - height);
     }
 
     override public function update():Void

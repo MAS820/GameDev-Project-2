@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.util.FlxRandom;
 
 /**
  * ...
@@ -23,11 +24,10 @@ class Whirlwind extends Obstacle
 		SpeedY = 300;
 		velocity.y = -SpeedY;
 		
+		FlxRandom.resetGlobalSeed();
+		
 		x = FlxG.width;
-		y = Math.random() * 490 + (FlxG.height - 490) - height;
-		if (y < (FlxG.height - 490 - height / 2)) {
-			y = FlxG.height - 490 - height / 2;
-		}
+		y = FlxRandom.floatRanged(FlxG.height - 490 - height / 2, FlxG.height - height);
 	}
 	
 	override public function update():Void
