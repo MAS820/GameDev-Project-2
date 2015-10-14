@@ -254,6 +254,7 @@ class ScrollState extends FlxState
 		var itr:Iterator<Whirlwind> = whirlArr.iterator();
 		
 		for (whirlwind in itr) {
+			whirlwind.update();
 			if (whirlwind.x > FlxG.width / 2)
 			{
 				spawn = false;
