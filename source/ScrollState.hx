@@ -35,6 +35,9 @@ class ScrollState extends FlxState
 	private var rockArr: Array<Rock>;
 	private var rockGroup: FlxTypedGroup<Rock>;
 	
+	private var whirlArr:Array<Whirlwind>;
+	private var whirlGroup:FlxTypedGroup<Whirlwind>;
+	
 	private var obstacleGroup: FlxGroup;
 	
 	private var collectibleArr:Array<Collectibles>;
@@ -67,7 +70,7 @@ class ScrollState extends FlxState
 		add(backdrop);
 		
 		road = new FlxBackdrop("assets/images/road.png", 0, 0, true, false);
-		road.y = 448;
+		road.y = 208;
 		road.velocity.x = -750;
 		add(road);
 		
@@ -83,6 +86,9 @@ class ScrollState extends FlxState
 		
 		rockArr = new Array<Rock>();
 		rockGroup = new FlxTypedGroup<Rock>();
+		
+		whirlArr = new Array<Whirlwind>();
+		whirlGroup = new FlxTypedGroup<Whirlwind>();
 		
 		obstacleGroup = new FlxGroup();
 		
@@ -121,9 +127,10 @@ class ScrollState extends FlxState
 		
 		_player.init(party);
 		
-		FlxSpriteUtil.bound(_player, 0, FlxG.width, 448, FlxG.height);
+		FlxSpriteUtil.bound(_player, 0, FlxG.width, 208, FlxG.height - 25);
 		
 		addRocks();
+		updateWhirlwind();
 		
 		// for levels past the first, add moose
 		if (party._level > 0)
@@ -238,6 +245,37 @@ class ScrollState extends FlxState
 			rockGroup.add(rockArr[rockArr.length - 1]);
 			obstacleGroup.add(rockArr[rockArr.length - 1]);
 
+		}
+	}
+	
+	private function updateWhirlwind():Void
+	{
+		var spawn:Bool = true;
+		var itr:Iterator<Whirlwind> = whirlArr.iterator();
+		
+		for (whirlwind in itr) {
+			whirlwind.update();
+			if (whirlwind.x > FlxG.width / 2)
+			{
+				spawn = false;
+			}
+			else if (whirlwind.x < -whirlwind.width)
+			{
+				remove(whirlwind);
+				whirlArr.remove(whirlwind);
+				whirlGroup.remove(whirlwind);
+				obstacleGroup.remove(whirlwind);
+			}
+		}
+		
+		spawn = spawn && (Math.random() < .05);
+		
+		if (spawn && whirlArr.length < 1)
+		{
+			whirlArr.push(new Whirlwind());
+			add(whirlArr[whirlArr.length - 1]);
+			whirlGroup.add(whirlArr[whirlArr.length - 1]);
+			obstacleGroup.add(whirlArr[whirlArr.length - 1]);
 		}
 	}
 	
