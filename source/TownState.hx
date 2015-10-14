@@ -64,7 +64,7 @@ class TownState extends FlxState
 		//array of quests
 		_questList = new Array();
 		
-		//0 = shopkeeper, 1 = repair person, 2-5 = 1st stop 
+		//0 = shopkeeper, 1 = repair person, 2-5 = quests 
 		_questList = [new QuestsClass(0, "money"), new QuestsClass(0, "money"), new QuestsClass(5, "water"),
 		new QuestsClass(5, "food"), new QuestsClass(5, "medicine")];
 		
@@ -258,7 +258,7 @@ class TownState extends FlxState
 					xBTN.visible = true;
 				}else if (obj._questNum == 1) {
 					//Replace with creating a quest HUD for a shop
-					questText.text = "Need repairs? $5 for 10 health";
+					questText.text = "Need repairs? $3 for 10 health";
 					
 					//construct questHUD for a shop
 					questText.visible = true;
@@ -288,15 +288,15 @@ class TownState extends FlxState
 	{
 		if (buyRepairBTN.visible == true)
 		{
-			if (party.getNum("money") >= 5 && party._carHealth < 100)
+			if (party.getNum("money") >= 3 && party._carHealth < 100)
 			{
 				if (100 - party._carHealth < 10)
 				{
-					party._money = party._money - 5;
+					party._money = party._money - 3;
 					party._carHealth = party._carHealth + (100 - party._carHealth);
 					updateItemCounters();
 				}else{
-					party._money = party._money - 5;
+					party._money = party._money - 3;
 					party._carHealth = party._carHealth + 10;
 					updateItemCounters();
 				}
@@ -388,8 +388,6 @@ class TownState extends FlxState
 	
 	private function ScareAway(): Bool
 	{
-		
-		// chance = 0.5(sqrt(100^2 - x^2) +/- (0..10))
 		var chanceOfLoss = Math.sqrt(10000 - (party._alcoholLevel) * (party._alcoholLevel));
 		chanceOfLoss += Math.random() * 10 - 5;
 		chanceOfLoss /= 2;

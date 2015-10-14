@@ -53,7 +53,7 @@ class ScrollState extends FlxState
 	private var numFollower : FlxText;
 	
 	//FOR TESTING
-	private var _testBTN : FlxButton;
+	//private var _testBTN : FlxButton;
 
 	//------------------------------------
 	//---------------CREATE---------------
@@ -157,8 +157,8 @@ class ScrollState extends FlxState
 		add(numFollower);
 		
 		//FOR TESTING
-		_testBTN = new FlxButton(10,70,"Go to town", clickToChange);
-		add(_testBTN);
+		//_testBTN = new FlxButton(10,70,"Go to town", clickToChange);
+		//add(_testBTN);
 		
 		FlxRandom.resetGlobalSeed();
 	}

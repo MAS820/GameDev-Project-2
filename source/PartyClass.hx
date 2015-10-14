@@ -28,7 +28,7 @@ class PartyClass
 		_food = 0;
 		_water = 0;
 		_medicine = 0;
-		_money = 100;
+		_money = 0;
 		
 		// start on the first level of game
 		_level = 0;
