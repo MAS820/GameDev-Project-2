@@ -30,7 +30,7 @@ class TransitionState extends FlxSubState
 		party = p;
 		if (party._level > 2) {
 			timer.stop();
-			if (party._followers >= 5) {
+			if (party._followers >= 3) {
 				text.text = "We're gonna make it!";
 				timer = Timer.delay(moveToWinScreen, 2000);
 			}
