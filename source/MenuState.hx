@@ -25,7 +25,7 @@ class MenuState extends FlxState
 	{
 		super.create();
 		
-		backdrop = new FlxBackdrop("assets/images/backdrop.png");
+		backdrop = new FlxBackdrop("assets/images/Parallax_0.png");
 		backdrop.velocity.x = -200;
 		add(backdrop);
 		
