@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.util.FlxRandom;
 
 /**
  * ...
@@ -19,10 +20,9 @@ class Rock extends Obstacle
 		height /= 2;
 		offset.y += height;
 		
+		FlxRandom.resetGlobalSeed();
+		
 		x = FlxG.width;
-		y = Math.random() * 490 + (FlxG.height - 490) - height;
-		if (y < (FlxG.height - 490 - height / 2)) {
-			y = FlxG.height - 490 - height / 2;
-		}
+		y = FlxRandom.floatRanged(FlxG.height - 490 - height / 2, FlxG.height - height);
 	}
 }

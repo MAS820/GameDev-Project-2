@@ -14,6 +14,7 @@ import flixel.addons.display.FlxBackdrop;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import haxe.Timer;
+import flixel.util.FlxRandom;
 import Truck;
 
 /**
@@ -61,6 +62,8 @@ class ScrollState extends FlxState
 	{
 		super.create();
 		
+		FlxG.sound.playMusic("assets/sounds/scrollMusic.ogg", 1, true);
+		
 		// DEBUG MODE
 		
 		FlxG.debugger.drawDebug = true;
@@ -71,13 +74,14 @@ class ScrollState extends FlxState
 		//--------------------------------------
 		//---------------PARALLAX---------------
 		//--------------------------------------
-		backdrop = new FlxBackdrop("assets/images/backdrop.png");
+		backdrop = new FlxBackdrop("assets/images/Parallax_0_short.png");
+		backdrop.y = 75;
 		backdrop.velocity.x = -200;
 		add(backdrop);
 		
 		road = new FlxBackdrop("assets/images/road.png", 0, 0, true, false);
 		road.y = 208;
-		road.velocity.x = -750;
+		road.velocity.x = -500;
 		add(road);
 		
 		//-------------------------------------
@@ -154,6 +158,8 @@ class ScrollState extends FlxState
 		//FOR TESTING
 		_testBTN = new FlxButton(10,70,"Go to town", clickToChange);
 		add(_testBTN);
+		
+		FlxRandom.resetGlobalSeed();
 	}
 	
 	public function init(p: PartyClass) {
@@ -195,7 +201,7 @@ class ScrollState extends FlxState
 			
 		updateCollectibles();
 		
-		// TODO: determine if the objects need to be destroyed / how we deal with collisions
+		// damage the player or give them a powerup as necessary
 		FlxG.overlap(_player, obstacleGroup, damagePlayer);
 		FlxG.overlap(_player, collectibles_layer, getCollectible);
 		
@@ -229,12 +235,12 @@ class ScrollState extends FlxState
 		if (!_player.isInvincible) {
 			// chance = 0.5(sqrt(100^2 - x^2) +/- (0..10))
 			var chanceOfLoss = Math.sqrt(10000 - (party._carHealth) * (party._carHealth));
-			chanceOfLoss += Math.random() * 10 - 5;
+			chanceOfLoss += FlxRandom.floatRanged(-5, 5);
 			chanceOfLoss /= 2;
-			if (Math.random() * 100 < chanceOfLoss && party._followers > 0) {
+			if (FlxRandom.floatRanged(0, 100) < chanceOfLoss && party._followers > 0) {
 				party._followers--;
-				
-				remove(minusText).destroy();
+				if (minusText != null)
+					remove(minusText).destroy();
 				minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
 				minusText.x -= minusText.width / 2;
 				add(minusText);
@@ -273,10 +279,16 @@ class ScrollState extends FlxState
 			}
 		}
 		
-		shouldSpawn = shouldSpawn && (Math.random() > 0.85);
+		shouldSpawn = shouldSpawn && (FlxRandom.float() > 0.85);
 		
 		if (shouldSpawn && mooseArr.length < 2) {
 			mooseArr.push(new Moose());
+			// make sure the moose isn't overlapping any other obstacles
+			while (FlxG.overlap(mooseArr[mooseArr.length - 1], obstacleGroup) ||
+					FlxG.overlap(mooseArr[mooseArr.length - 1], collectibles_layer)) {
+				mooseArr.pop().destroy();
+				mooseArr.push(new Moose());
+			}
 			mooseGroup.add(mooseArr[mooseArr.length - 1]);
 		}
 	}
@@ -294,10 +306,15 @@ class ScrollState extends FlxState
 			}
 		}
 		
-		shouldSpawn = shouldSpawn && (Math.random() > 0.5);
+		shouldSpawn = shouldSpawn && (FlxRandom.float() > 0.5);
 		
 		if (shouldSpawn && rockArr.length < 4) {
 			rockArr.push(new Rock());
+			while (FlxG.overlap(rockArr[rockArr.length - 1], obstacleGroup) ||
+					FlxG.overlap(rockArr[rockArr.length - 1], collectibles_layer)) {
+				rockArr.pop().destroy();
+				rockArr.push(new Rock());
+			}
 			rockGroup.add(rockArr[rockArr.length - 1]);
 
 		}
@@ -321,7 +338,7 @@ class ScrollState extends FlxState
 			}
 		}
 		
-		spawn = spawn && (Math.random() < .05);
+		spawn = spawn && (FlxRandom.float() < .05);
 		
 		if (spawn && whirlArr.length < 1)
 		{
@@ -348,15 +365,18 @@ class ScrollState extends FlxState
 			{
 				collectibleArr.remove(collectible);
 				collectibles_layer.remove(collectible).destroy();
-				//
 			}
 		}
 		
-		spawn = spawn && (Math.random() > 0.45);
+		spawn = spawn && (FlxRandom.float() > 0.45);
 		
 		if (spawn && collectibleArr.length < 4)
 		{
 			collectibleArr.push(new Collectibles());
+			while (FlxG.overlap(collectibleArr[collectibleArr.length - 1], obstacleGroup)) {
+				collectibleArr.pop().destroy();
+				collectibleArr.push(new Collectibles());
+			}
 			collectibles_layer.add(collectibleArr[collectibleArr.length -1]);
 		}
 	}

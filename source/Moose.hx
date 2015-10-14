@@ -1,6 +1,7 @@
 package;
 
 import flixel.FlxG;
+import flixel.util.FlxRandom;
 
 /**
  * ...
@@ -18,14 +19,14 @@ class Moose extends Obstacle
 		setGraphicSize(150, 0);
 		updateHitbox();
 		
-		x = FlxG.width;
-		y = Math.random() * 490 + (FlxG.height - 490) - height;
-		if (y < (FlxG.height - 490 - height / 2)) {
-			y = FlxG.height - 490 - height / 2;
-		}
+		FlxRandom.resetGlobalSeed();
 		
-		maxSpeed = 300;
-		defaultSpeed = 150;
+		x = FlxG.width;
+		y = FlxRandom.floatRanged(FlxG.height - 490 - height / 2, FlxG.height - height);
+
+		maxSpeed = 700;
+		defaultSpeed = 500;
+		
 		velocity.x = -defaultSpeed;
 		
 		height = height * 2 / 3;

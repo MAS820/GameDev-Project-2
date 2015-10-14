@@ -11,7 +11,8 @@ class Obstacle extends FlxSprite {
 	{
 		super(0, 0);
 		loadGraphic(sprite, false);
-		speed = 300;
+		this.y -= this.frameHeight / 2;
+		speed = 500;
 		velocity.x = -speed;
 	}
 }
