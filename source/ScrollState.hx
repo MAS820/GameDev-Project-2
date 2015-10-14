@@ -64,7 +64,7 @@ class ScrollState extends FlxState
 	
 		FlxG.mouse.visible = false;
 		
-		// FlxG.sound.playMusic("assets/sounds/scrollMusic.ogg", 1, true);
+		FlxG.sound.playMusic("assets/sounds/scrollMusic.ogg", 1, true);
 		
 		// DEBUG MODE
 		
