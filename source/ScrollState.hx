@@ -61,7 +61,7 @@ class ScrollState extends FlxState
 	{
 		super.create();
 		
-		// FlxG.sound.playMusic("assets/sounds/scrollMusic.ogg", 1, true);
+		FlxG.sound.playMusic("assets/sounds/scrollMusic.ogg", 1, true);
 		
 		// DEBUG MODE
 		
