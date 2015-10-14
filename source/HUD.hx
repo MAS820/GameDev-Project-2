@@ -18,7 +18,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 	private var _sprBack: FlxSprite;
 	private var _sprHealth: FlxBar;
 	private var _txtHealth: FlxText;
-	private var _txtTimer: FlxText;
+	public var _txtTimer: FlxText;
 	private var _player: Truck;
 
 	public function new(player) 
@@ -27,8 +27,8 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		
 		_player = player;
 		
-		_sprBack = new FlxSprite().makeGraphic(FlxG.width, 100, FlxColor.BLACK);
-		_sprBack.drawRect(0, 98, FlxG.width, 2, FlxColor.WHITE);
+		_sprBack = new FlxSprite().makeGraphic(FlxG.width, 170, FlxColor.BLACK);
+		_sprBack.drawRect(0, 168, FlxG.width, 2, FlxColor.WHITE);
 		
 		_sprHealth = new FlxBar(10, 10);
 		_txtHealth = new FlxText(10, 30, 0, "Damage: ", 14);
@@ -37,7 +37,7 @@ class HUD extends FlxTypedGroup<FlxSprite>
 		_txtAlcohol = new FlxText(FlxG.width - 160, 30, 160, "Alcohol: ", 14);
 		_txtAlcohol.alignment = "right";
 		
-		_txtTimer = new FlxText(FlxG.width / 2 - 75, 5, 150, "1:00", 48);
+		_txtTimer = new FlxText(FlxG.width / 2 + 350, 80, 150, "1:00", 20);
 		_txtTimer.alignment = "center";
 		
 		add(_sprBack);

@@ -44,6 +44,11 @@ class ScrollState extends FlxState
 	private var collectibles_layer:FlxTypedGroup<Collectibles>;
 	
 	private var minusText: FlxText;
+	private var InventoryHUD : FlxSprite;
+	private var numWater : FlxText;
+	private var numFood : FlxText;
+	private var numMedicine : FlxText;
+	private var numMoney : FlxText;
 	
 	//FOR TESTING
 	private var _testBTN : FlxButton;
@@ -106,6 +111,38 @@ class ScrollState extends FlxState
 		//---------------------------------		
 		scrollHud = new HUD(_player);
 		add(scrollHud);
+		
+		//inventory HUD
+		InventoryHUD = new FlxSprite();
+		InventoryHUD.loadGraphic("assets/images/HotBar_2.png");
+		InventoryHUD.scale.set(0.35, 0.35);
+		InventoryHUD.x = FlxG.width - (InventoryHUD.width * .85);
+		InventoryHUD.y = FlxG.height - (InventoryHUD.height * 1.18);
+		add(InventoryHUD);
+		
+		numFood = new FlxText(322,122);
+		numFood.text = Std.string(party.getNum("food"));
+		numFood.size = 15;
+		numFood.color = FlxColor.RED;
+		add(numFood);
+		
+		numWater = new FlxText(406,122);
+		numWater.text = Std.string(party.getNum("water"));
+		numWater.size = 15;
+		numWater.color = FlxColor.RED;
+		add(numWater);
+		
+		numMoney = new FlxText(488,122);
+		numMoney.text = Std.string(party.getNum("money"));
+		numMoney.size = 15;
+		numMoney.color = FlxColor.RED;
+		add(numMoney);
+		
+		numMedicine = new FlxText(575,122);
+		numMedicine.text = Std.string(party.getNum("medicine"));
+		numMedicine.size = 15;
+		numMedicine.color = FlxColor.RED;
+		add(numMedicine);
 		
 		//FOR TESTING
 		_testBTN = new FlxButton(10,70,"Go to town", clickToChange);
@@ -173,6 +210,11 @@ class ScrollState extends FlxState
 			minusText.x = _player.x + _player.width / 2 - minusText.width / 2;
 			minusText.y = _player.y - 20;
 		}
+		
+		numMoney.text = Std.string(party.getNum("money"));
+		numMedicine.text = Std.string(party.getNum("medicine"));
+		numFood.text = Std.string(party.getNum("food"));
+		numWater.text = Std.string(party.getNum("water"));
 	}
 	
 	private function damagePlayer(ob1: FlxObject, ob2: FlxObject): Void {
