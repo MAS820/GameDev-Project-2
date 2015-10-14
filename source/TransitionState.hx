@@ -13,19 +13,33 @@ import flixel.text.FlxText;
 class TransitionState extends FlxSubState
 {
 	private var party : PartyClass;
+	private var timer: Timer;
+	private var text: FlxText;
 
 	public function new(BGColor:Int=FlxColor.TRANSPARENT) 
 	{
 		super(BGColor);
-		Timer.delay(moveToTown, 2000);
+		timer = Timer.delay(moveToTown, 2000);
 		
-		var gameOverText = new FlxText(FlxG.width / 2 - 250, FlxG.height / 2, 500, "We made it to town.", 24);
-		gameOverText.alignment = "center";
-		add(gameOverText);
+		text = new FlxText(FlxG.width / 2 - 250, FlxG.height / 2, 500, "We made it to town.", 24);
+		text.alignment = "center";
+		add(text);
 	}
 	
 	public function init(p: PartyClass) {
 		party = p;
+		if (party._level > 2) {
+			timer.stop();
+			if (party._followers >= 5) {
+				text.text = "We're gonna make it!";
+				timer = Timer.delay(moveToWinScreen, 2000);
+			}
+			else {
+				text.text = "We couldn't save enough people...";
+				timer = Timer.delay(gameOverScreen, 2000);
+			}
+		}
+		
 	}
 	
 	private function moveToTown() {
@@ -34,4 +48,11 @@ class TransitionState extends FlxSubState
 		FlxG.switchState(nextTown);
 	}
 	
+	private function moveToWinScreen() {
+		FlxG.switchState(new WinState());
+	}
+	
+	private function gameOverScreen() {
+		openSubState(new GameOverState(FlxColor.BLACK));
+	}
 }
