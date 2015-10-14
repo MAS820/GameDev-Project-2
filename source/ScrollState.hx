@@ -61,6 +61,8 @@ class ScrollState extends FlxState
 	{
 		super.create();
 		
+		FlxG.sound.playMusic("assets/sounds/scrollMusic.ogg", 1, true);
+		
 		// DEBUG MODE
 		
 		FlxG.debugger.drawDebug = true;
@@ -71,13 +73,14 @@ class ScrollState extends FlxState
 		//--------------------------------------
 		//---------------PARALLAX---------------
 		//--------------------------------------
-		backdrop = new FlxBackdrop("assets/images/backdrop.png");
+		backdrop = new FlxBackdrop("assets/images/Parallax_0_short.png");
+		backdrop.y = 75;
 		backdrop.velocity.x = -200;
 		add(backdrop);
 		
 		road = new FlxBackdrop("assets/images/road.png", 0, 0, true, false);
 		road.y = 208;
-		road.velocity.x = -750;
+		road.velocity.x = -500;
 		add(road);
 		
 		//-------------------------------------

@@ -21,7 +21,7 @@ class Collectibles extends FlxSprite
         super(0, 0);
 
 		var typeGen:Float = Math.random();
-		velocity.x = -300;
+		velocity.x = -500;
 		
 		if (typeGen >= 0.8) {
 			type = "money";

@@ -14,15 +14,15 @@ class Whirlwind extends Obstacle
 	public function new():Void 
 	{
 		super("assets/images/whirlwind.png");
+		SpeedY = 100;
+		velocity.y = -SpeedY;
+		velocity.x = -400;
 		setGraphicSize(0, 100);
 		updateHitbox();
 		
 		// make a reasonable collision hitbox
 		width /= 2;
 		offset.x += width / 2;
-		
-		SpeedY = 300;
-		velocity.y = -SpeedY;
 		
 		FlxRandom.resetGlobalSeed();
 		

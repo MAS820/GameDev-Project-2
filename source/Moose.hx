@@ -23,9 +23,10 @@ class Moose extends Obstacle
 		
 		x = FlxG.width;
 		y = FlxRandom.floatRanged(FlxG.height - 490 - height / 2, FlxG.height - height);
+
+		maxSpeed = 700;
+		defaultSpeed = 500;
 		
-		maxSpeed = 300;
-		defaultSpeed = 150;
 		velocity.x = -defaultSpeed;
 		
 		height = height * 2 / 3;
