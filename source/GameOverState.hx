@@ -25,13 +25,15 @@ class GameOverState extends FlxSubState
 		background.screenCenter();
 		add(background);
 		
-		var gameOverText = new FlxText(FlxG.width / 2 - 150, FlxG.height / 6, 300, "Game over...", 64);
+		var gameOverText = new FlxText(FlxG.width / 2 - 250, FlxG.height / 6, 500, "Game over...", 64);
 		gameOverText.alignment = "center";
 		add(gameOverText);
 		
 		var resetButton = new FlxButton(FlxG.width / 2, FlxG.height / 6 + 72, "Start over", startOver);
 		resetButton.x -= resetButton.width / 2;
 		add(resetButton);
+		
+		FlxG.mouse.visible = true;
 	}
 	
 	function startOver():Void
