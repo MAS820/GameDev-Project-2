@@ -9,9 +9,8 @@ class Obstacle extends FlxSprite {
 	
 	public function new(sprite: String) 
 	{
-		super(FlxG.width, Math.random() * (FlxG.height - 450) + 450);
+		super(0, 0);
 		loadGraphic(sprite, false);
-		this.y -= this.frameHeight / 2;
 		speed = 300;
 		velocity.x = -speed;
 	}

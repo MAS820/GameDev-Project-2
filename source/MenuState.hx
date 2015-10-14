@@ -35,7 +35,9 @@ class MenuState extends FlxState
 		add(road);
 		
 		var car = new FlxSprite();
-		car.loadGraphic("assets/images/car.png");
+		car.loadGraphic("assets/images/truck.png");
+		car.setGraphicSize(200, 0);
+		car.updateHitbox();
 		add(car);
 		car.x = 390;
 		car.y = 520;
