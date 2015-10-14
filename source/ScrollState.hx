@@ -240,8 +240,9 @@ class ScrollState extends FlxState
 			chanceOfLoss /= 2;
 			if (FlxRandom.floatRanged(0, 100) < chanceOfLoss && party._followers > 0) {
 				party._followers--;
-				if (minusText != null)
-					remove(minusText).destroy();
+				var txt = remove(minusText);
+				if (txt != null)
+					txt.destroy();
 				minusText = new FlxText(_player.x + _player.width / 2, _player.y - 20, 100, "-1 follower", 14);
 				minusText.x -= minusText.width / 2;
 				add(minusText);
