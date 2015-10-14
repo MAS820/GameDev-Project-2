@@ -30,8 +30,14 @@ class TransitionState extends FlxSubState
 		party = p;
 		if (party._level > 2) {
 			timer.stop();
-			text.text = "We're gonna make it!";
-			timer = Timer.delay(moveToWinScreen, 2000);
+			if (party._followers >= 5) {
+				text.text = "We're gonna make it!";
+				timer = Timer.delay(moveToWinScreen, 2000);
+			}
+			else {
+				text.text = "We couldn't save enough people...";
+				timer = Timer.delay(gameOverScreen, 2000);
+			}
 		}
 		
 	}
@@ -44,5 +50,9 @@ class TransitionState extends FlxSubState
 	
 	private function moveToWinScreen() {
 		FlxG.switchState(new WinState());
+	}
+	
+	private function gameOverScreen() {
+		openSubState(new GameOverState(FlxColor.BLACK));
 	}
 }
